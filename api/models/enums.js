@@ -3,20 +3,19 @@ module.exports = {
         ADMIN: 'admin',
         USER: 'user'
     },
-    CHAT_TYPE: {
-        PRIVATE: "private",
-        GROUP: "group"
-    },
-    MESSAGE_TYPE: {
-        TEXT: "text",
-        VOICE: "voice",
-        PICTURE: "picture",
-        VIDEO: "video",
-        FILE: "file"
-    },
     GENDER:{
         MALE:"male",
         FEMALE:"female",
         NONE:"none"
+    },
+    STATUS:{
+        OPEN:"open",
+        CLOSE:"close",
+    },
+    SEVERITY:{
+        CRITICAL:"critical",
+        MAJOR : "major",
+        MINER : "miner",
+        NONE : "none"
     }
 };
