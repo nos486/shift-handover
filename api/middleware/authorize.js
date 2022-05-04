@@ -22,7 +22,6 @@ function authorize(roles = []) {
             if (!user || (roles.length && !roles.includes(user.role))) {
                 return res.status(403).json({message: 'Forbidden'});
             }
-            console.log(user)
             req.user = user
             // const refreshTokens = await models.RefreshToken.find({ user: user.id });
             next();
