@@ -4,7 +4,7 @@ function validateRequest(req, next, schema) {
         allowUnknown: false, // ignore unknown props
         stripUnknown: true // remove unknown props
     };
-    const { error, value } = schema.validate(req.body, options);
+    const { error, value } = schema.validate(req.query, options);
     if (error) {
         // next(`Validation error: ${error.details.map(x => x.message).join(', ')}`);
 
@@ -17,7 +17,7 @@ function validateRequest(req, next, schema) {
         // next(errList)
 
     } else {
-        req.body = value;
+        req.query = value;
         next();
     }
 }
