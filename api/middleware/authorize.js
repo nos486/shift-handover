@@ -17,14 +17,16 @@ function authorize(roles = []) {
 
         // authorize based on user role
         async (req, res, next) => {
-            const user = userController.findUserById(req.user.id)
+            userController.findUserById(req.user.id).then((user)=>{
+                if (!user || (roles.length && !roles.includes(user.role))) {
+                    return res.status(403).json({message: 'Forbidden'});
+                }
+                req.user = user
+                // const refreshTokens = await models.RefreshToken.find({ user: user.id });
+                next();
+            }).catch(next)
 
-            if (!user || (roles.length && !roles.includes(user.role))) {
-                return res.status(403).json({message: 'Forbidden'});
-            }
-            req.user = user
-            // const refreshTokens = await models.RefreshToken.find({ user: user.id });
-            next();
+
         }
     ];
 }
