@@ -1,0 +1,30 @@
+.div-hover {
+  background: rgba(0, 0, 0, 0.06)
+}
+.div-hover:hover {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.div-hover-light {
+  background: rgba(0, 0, 0, 0.03)
+}
+.div-hover-light:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.div-hover-transparent {
+  background: rgba(255, 255, 255, 0.6)
+}
+.div-hover-transparent:hover {
+  background: rgba(255, 255, 255, 1)
+}
+
+html, body { background-attachment: scroll !important; }
+
+.hideScrollbars::-webkit-scrollbar {
+  display: none;
+}
+.hideScrollbars {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

@@ -1,17 +1,21 @@
 
 const userModel = require('./../models/User')
+const domainModel = require('./../models/Domain')
 const tokenController = require("./token")
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const {randomString} = require("../helper/utils");
-
 
 module.exports = {
     hasUsername,
     hasEmail,
     createUser,
     findUserById,
+    findUserByUsername,
     authenticate,
+    getUsersPagination,
+    deleteUsers,
+    updateUser
     // refreshToken,
     // deleteRefreshToken,
     // getAll,
@@ -28,7 +32,7 @@ async function hasEmail (email){
 }
 
 
-async function createUser(username, email, password){
+async function createUser({username, email,firstname,lastName,phoneNumber,domain,role,gender,about, password}){
     username = username.toLowerCase()
 
     if (await hasUsername(username)){
@@ -39,9 +43,27 @@ async function createUser(username, email, password){
         throw "Email exist"
     }
 
+    let domainName = ""
+    if(domain !== null && domain !== undefined){
+        let domainQuery = await domainModel.findById(domain)
+        if (domainQuery === null) {
+            throw "domain not find"
+        }else {
+            domainName = domainQuery.name
+        }
+    }
+
     let user = new userModel({
-        username: username,
-        email : email,
+        username,
+        email,
+        firstname,
+        lastName,
+        phoneNumber,
+        domain,
+        domainName,
+        role,
+        gender,
+        about,
         password : bcrypt.hashSync(password, 10),
     });
 
@@ -51,7 +73,11 @@ async function createUser(username, email, password){
 
 
 async function findUserById(userId){
-    return userModel.findById(userId)
+    return userModel.findOne({_id : userId})
+}
+
+async function findUserByUsername(username){
+    return userModel.findOne({username})
 }
 
 
@@ -76,6 +102,68 @@ async function authenticate({ username, password, ipAddress }) {
         jwtToken,
         refreshToken: refreshToken.token
     };
+}
+
+
+
+async function getUsersPagination(query) {
+    if ("name" in query) query["name"] = {'$regex' : `${query["name"]}`, '$options' : 'i'}
+
+    let page = (query.page !== undefined) ? Math.max(1, query.page) : 1
+    let itemsPerPage = (query.itemsPerPage !== undefined) ? Math.max(1, query.itemsPerPage) : 5
+    let sortBy = (query.sortBy !== undefined) ? {[query.sortBy]: (query.sortDesc === "true" ? 1 : -1)} : "createdAt"
+
+    return {
+        itemsPerPage,
+        page,
+        total : await userModel.count(query),
+        result: await userModel.find(query).sort(sortBy).limit(itemsPerPage).skip((page - 1)*itemsPerPage)
+    }
+}
+
+async function deleteUsers(ids) {
+    let result = []
+    for(let id of ids){
+        result.push(await userModel.deleteOne({_id:id}))
+    }
+    return result
+}
+
+async function updateUser(query) {
+
+    let domainName = ""
+    if(query.domain !== null && query.domain !== undefined){
+        let domainQuery = await domainModel.findById(query.domain)
+        if (domainQuery === null) {
+            throw "domain not find"
+        }else {
+            domainName = domainQuery.name
+        }
+    }
+
+    let userQuery = await userModel.findOne({_id: query._id});
+    delete query._id
+
+    let username = query.username.toLowerCase()
+
+    if (await hasUsername(username)){
+        if (username !== userQuery.username) throw "Username exist"
+    }
+
+    if (await hasEmail(query.email)){
+        if (query.email !== userQuery.email) throw "Email exist"
+    }
+
+
+    for (const [key, value] of Object.entries(query)) {
+        userQuery[key] = value
+    }
+    userQuery.domainName = domainName
+
+    if (query.password !== undefined) userQuery.password = bcrypt.hashSync(query.password, 10)
+
+    await userQuery.save()
+    return userQuery
 }
 
 

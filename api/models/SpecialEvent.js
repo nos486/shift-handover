@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const {ROLE,SEVERITY,STATUS} = require("./enums")
+const {string} = require("joi");
 
 const schema = new mongoose.Schema(
     {
@@ -13,7 +14,7 @@ const schema = new mongoose.Schema(
         },
         status: {
             type: String,
-            default : STATUS.CLOSE
+            default : STATUS.OPEN
         },
         severity: {
             type: String,
@@ -22,6 +23,10 @@ const schema = new mongoose.Schema(
         reporter: {
             type: mongoose.Types.ObjectId,
             ref: "User",
+            require: true
+        },
+        reporterName: {
+            type: String,
             require: true
         },
         startTime: {
@@ -38,9 +43,29 @@ const schema = new mongoose.Schema(
         outageEndTime: {
             type: Date,
         },
+        outage : {
+            type: String,
+        },
+        affectedDomains:[{
+            type: mongoose.Types.ObjectId,
+            ref: 'Domain'
+        }],
+        affectedDomainsNames: [{
+            type: String,
+        }],
+        affectedServices:[{
+            type: mongoose.Types.ObjectId,
+            ref: 'Service'
+        }],
+        affectedServicesNames: [{
+            type: String,
+        }],
         domain: {
             type: mongoose.Types.ObjectId,
             ref: 'Domain'
+        },
+        domainName: {
+            type: String,
         },
 
     },

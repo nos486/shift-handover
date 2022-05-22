@@ -40,7 +40,7 @@ function generateJwtToken(user) {
     return jwt.sign(
         { id: user.id },
         process.env.SECRET,
-        { expiresIn: '15d' },null
+        { expiresIn: '15m' },null
     );
 }
 

@@ -5,64 +5,70 @@ Joi.objectId = require('joi-objectid')(Joi)
 const validateRequest = require("../../middleware/validate-request");
 const validateQuery = require("../../middleware/validate-query");
 const domainController = require("../../controllers/domain");
+const authorize = require("../../middleware/authorize");
+const {ROLE} = require("../../models/enums");
 
 
 const router = express.Router();
-router.post("/", addDomainSchema, addDomain)
-router.get("/all", getDomains)
-router.get("/", viewDomainSchema, getDomain)
-router.delete("/", viewDomainSchema, deleteDomain)
-router.put("/", updateDomainSchema, updateDomain)
+router.post("/", authorize(ROLE.ADMIN),addDomainSchema, addDomain)
+router.get("/", authorize(),viewDomainSchema, getDomains)
+router.delete("/", authorize(ROLE.ADMIN),deleteDomainSchema, deleteDomains)
+router.put("/", authorize([ROLE.ADMIN]),updateDomainSchema, updateDomain)
 
 
 function addDomainSchema(req, res, next) {
     const schema = Joi.object({
         name: Joi.string().required(),
-        manager: Joi.objectId().allow(null),
+        manager: Joi.objectId().optional().allow(null),
     });
 
     validateRequest(req, next, schema);
 }
 
 function addDomain(req, res, next) {
-    const {name, manager} = req.body;
-    domainController.addDomain({name, manager}).then((domain) => {
+    domainController.addDomain(req.body).then((domain) => {
         res.json(domain)
     }).catch(next);
 }
 
-function getDomains(req, res, next) {
-    domainController.getDomains().then((domains) => {
-        res.json(domains)
-    })
-}
 
 function viewDomainSchema(req, res, next) {
     const schema = Joi.object({
         _id: Joi.objectId().optional(),
         name: Joi.string().optional(),
         manager: Joi.objectId().optional(),
-    }).or('_id', 'name', 'manager').required();
+        itemsPerPage: Joi.number().optional(),
+        page: Joi.number().optional(),
+        sortBy: Joi.string().optional(),
+        sortDesc: Joi.string().optional(),
+    })
     validateQuery(req, next, schema);
 }
 
-function getDomain(req, res, next) {
-    domainController.getDomain(req.query).then((domain) => {
-        res.json(domain)
-    })
+function getDomains(req, res, next) {
+    domainController.getDomainsPagination(req.query).then((domains) => {
+        res.json(domains)
+    }).catch(next)
 }
 
-function deleteDomain(req, res, next) {
-    domainController.deleteDomain(req.query).then((domain) => {
+function deleteDomainSchema(req, res, next) {
+    const schema = Joi.object({
+        _ids: Joi.array().items(Joi.objectId().optional()) ,
+    });
+    validateRequest(req, next, schema);
+}
+
+function deleteDomains(req, res, next) {
+    domainController.deleteDomains(req.body._ids).then((domain) => {
         res.json(domain)
-    })
+    }).catch(next)
 }
 
 function updateDomainSchema(req, res, next) {
     const schema = Joi.object({
         _id: Joi.objectId().required(),
         name: Joi.string().optional(),
-        manager: Joi.objectId().optional(),
+        manager: Joi.objectId().optional().allow(null),
     });
     validateRequest(req, next, schema);
 }
@@ -70,7 +76,7 @@ function updateDomainSchema(req, res, next) {
 function updateDomain(req, res, next) {
     domainController.updateDomain(req.body).then((domain) => {
         res.json(domain)
-    })
+    }).catch(next)
 }
 
 

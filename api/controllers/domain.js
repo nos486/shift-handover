@@ -1,51 +1,92 @@
 const domainModel = require('./../models/Domain')
-const userController = require("./user")
+const userModel = require('./../models/User')
 
 module.exports = {
     addDomain,
     getDomains,
-    getDomain,
-    deleteDomain,
+    getDomainsPagination,
+    deleteDomains,
     updateDomain
 }
 
 async function addDomain({name, manager}) {
 
-    if (manager !== null && !await userController.findUserById(manager)) {
-        throw "manager not find"
+    let managerName = ""
+    if(manager !== null){
+        let userQuery = await userModel.findById(manager)
+        if (manager !== undefined && !userQuery) {
+            throw "manager not find"
+        }else {
+            managerName = userQuery.username
+        }
     }
 
-    await getDomain({name: name}).then((result) => {
-        if (result !== null) throw "domain name exist"
+    await domainModel.find({name: name}).then((result) => {
+        if (result.length !== 0) throw "domain name exist"
     })
 
     return await domainModel.create({
-        name, manager
+        name,
+        manager,
+        managerName
     })
 }
 
-async function getDomain(query) {
-    return domainModel.findOne(query);
+/**
+ *
+ * @param query
+ * @returns  {Promise<[Object]>}
+ */
+async function getDomainsPagination(query) {
+    if ("name" in query) query["name"] = {'$regex' : `${query["name"]}`, '$options' : 'i'}
+
+    let page = (query.page !== undefined) ? Math.max(1, query.page) : 1
+    let itemsPerPage = (query.itemsPerPage !== undefined) ? Math.max(1, query.itemsPerPage) : 5
+    let sortBy = (query.sortBy !== undefined) ? {[query.sortBy]: (query.sortDesc === "true" ? 1 : -1)} : {"createdAt":-1}
+
+    return {
+        itemsPerPage,
+        page,
+        total : await domainModel.count(query),
+        result: await domainModel.find(query).sort(sortBy).limit(itemsPerPage).skip((page - 1)*itemsPerPage)
+    }
 }
 
-async function deleteDomain(query) {
-    return domainModel.deleteOne(query);
+/**
+ *
+ * @param query
+ * @returns  {Promise<[Object]>}
+ */
+async function getDomains(query) {
+    if ("name" in query) query["name"] = {'$regex' : `${query["name"]}`, '$options' : 'i'}
+    return domainModel.find(query);
+}
+
+
+async function deleteDomains(ids) {
+    let result = []
+    for(let id of ids){
+        result.push(await domainModel.deleteOne({_id:id}))
+    }
+    return result
 }
 
 async function updateDomain(query) {
     let domain = await domainModel.findOne({_id: query._id});
     delete query._id
 
+
+    let userQuery = await userModel.findById(query.manager)
+    if (query.manager !== null && !userQuery) {
+            throw "manager not find"
+    }
+
     for (const [key, value] of Object.entries(query)) {
         domain[key] = value
     }
 
+    domain.managerName = query.manager !== null ? userQuery.username : ""
+
     await domain.save()
     return domain
 }
-
-async function getDomains() {
-    return domainModel.find({});
-}
-
-

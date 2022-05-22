@@ -17,5 +17,10 @@ module.exports = {
         MAJOR : "major",
         MINER : "miner",
         NONE : "none"
+    },
+    SERVICE:{
+        VOICE:"voice",
+        SMS : "sms",
+        DATA : "data",
     }
 };

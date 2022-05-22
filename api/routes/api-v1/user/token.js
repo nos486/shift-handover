@@ -3,7 +3,6 @@ const router = express.Router();
 const enums = require("./../../../models/enums")
 const Joi = require("joi");
 
-
 const authorize = require("../../../middleware/authorize");
 const validateRequest = require("../../../middleware/validate-request");
 const userController = require("../../../controllers/user");

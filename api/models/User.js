@@ -14,8 +14,6 @@ const schema = new mongoose.Schema(
         },
         phoneNumber: {
             type: String,
-            unique: true,
-            sparse: true,
         },
         password: {
             type: String,
@@ -29,6 +27,9 @@ const schema = new mongoose.Schema(
         domain: {
             type: mongoose.Types.ObjectId,
             ref: 'Domain'
+        },
+        domainName: {
+            type: String,
         },
         firstName: {
             type: String,

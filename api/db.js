@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const userController = require("./controllers/user")
+const domainController = require("./controllers/domain")
+const {ROLE} = require("./models/enums");
 
 const connectionOptions = {
     useCreateIndex: true,
@@ -15,7 +17,19 @@ function dbConnect() {
         console.log(await userController.hasUsername("admin"))
         // create admin user
         if (!await userController.hasUsername("admin")) {
-            let admin = await userController.createUser("admin", "", "admin",)
+            let admin = await userController.createUser(
+                {
+                    username: "admin",
+                    password: "admin",
+                    role : ROLE.ADMIN
+                })
+
+            admin.domain = await domainController.addDomain(
+                {
+                    name: "Administrator",
+                    manager: admin._id
+                })
+            await admin.save()
             console.log("admin created")
         }
 

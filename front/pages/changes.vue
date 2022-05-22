@@ -1,13 +1,14 @@
 <template>
   <div>
-    index
+    ChangeRequests
   </div>
 </template>
 
 <script>
 export default {
+  name: 'ChangeRequests',
   mounted() {
-    // this.$router.push("/main")
+
   }
 }
 </script>

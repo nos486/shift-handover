@@ -1,13 +1,14 @@
 <template>
   <div>
-    index
+    Main
   </div>
 </template>
 
 <script>
 export default {
+  name: 'Main',
   mounted() {
-    // this.$router.push("/main")
+
   }
 }
 </script>

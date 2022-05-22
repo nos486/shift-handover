@@ -7,11 +7,11 @@ const schema = new mongoose.Schema(
             unique : true,
             required: true,
         },
-        manager: {
+        domain: {
             type: mongoose.Types.ObjectId,
-            ref: "User"
+            ref: 'Domain'
         },
-        managerName: {
+        domainName: {
             type: String,
         },
     }, {timestamps: true},
@@ -28,5 +28,5 @@ schema.set('toJSON', {
     }
 });
 
-const Domain = mongoose.model('Domain', schema);
-module.exports = Domain;
+const Service = mongoose.model('Service', schema);
+module.exports = Service;
