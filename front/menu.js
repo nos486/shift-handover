@@ -10,6 +10,48 @@ export default new Menu({
       to: '/main'
     }),
     new Menu({
+      value: 'shift',
+      icon: 'mdi-apps',
+      title: 'Shift',
+      to: '/shift',
+      editable : false,
+      headers: [
+        new Header({text: 'ID', value: 'id', isHidden: true}),
+        new Header({text: 'Date', value: 'date', type: Date, defaultAmount: null, isFilterable: true, slot: "date"}),
+        new Header({
+          text: 'Shift', value: 'isDay', type: "select",
+          defaultAmount: true,
+          items: [
+            {
+              name: "Day",
+              value: true
+            },
+            {
+              name: "Night",
+              value: false
+            },
+          ], slot: "isDay"
+        }),
+        new Header({
+          text: 'Operator',
+          value: 'operator',
+          type: "select",
+          items: "user",
+          itemKey: "username",
+          isHidden : true
+        }),
+        new Header({text: 'Operator', value: 'operatorName', slot: "operatorName", isReadOnly: true}),
+        new Header({
+          text: 'Domain',
+          value: 'domain',
+          type: "select",
+          items: "domain",
+          isHidden : true
+        }),
+        new Header({text: 'Domain', value: 'domainName', slot: "domainName", isReadOnly: true}),
+      ]
+    }),
+    new Menu({
       value: 'event',
       icon: 'mdi-calendar-text',
       title: 'Special Events',
@@ -58,21 +100,21 @@ export default new Menu({
               name: "OPEN",
               value: "open"
             }
-          ],slot:"status"
+          ], slot: "status"
         }),
-        new Header({text: 'Start Time', value: 'startTime', type: Date, defaultAmount: null, slot: "startTime"}),
-        new Header({text: 'End Time', value: 'endTime', type: Date, defaultAmount: null, slot: "endTime"}),
+        new Header({text: 'Start Time', value: 'startTime', type: "DateTime", defaultAmount: null, slot: "startTime"}),
+        new Header({text: 'End Time', value: 'endTime', type: "DateTime", defaultAmount: null, slot: "endTime"}),
         new Header({
           text: 'Outage Start',
           value: 'outageStartTime',
-          type: Date, defaultAmount: null,
+          type: "DateTime", defaultAmount: null,
           slot: "outageStartTime",
           isCreateOnly: true
         }),
         new Header({
           text: 'Outage End',
           value: 'outageEndTime',
-          type: Date,
+          type: "DateTime",
           defaultAmount: null,
           slot: "outageEndTime",
           isCreateOnly: true
@@ -108,7 +150,7 @@ export default new Menu({
           isCreateOnly: true,
           isUpdateOnly: true
         }),
-        new Header({text: 'Created At', value: 'createdAt', type: Date, slot: "createdAt", isHidden: true})
+        new Header({text: 'Created At', value: 'createdAt', type: "DateTime", slot: "createdAt", isHidden: true})
       ]
     }),
     new Menu({
@@ -172,9 +214,12 @@ export default new Menu({
             new Header({text: 'ID', value: 'id', isHidden: true}),
             new Header({text: 'UserName', value: 'username'}),
             new Header({text: 'Email', value: 'email'}),
-            new Header({text: 'Password', value: 'password', isCreateOnly: true,
-              isUpdateOnly: true}),
-            new Header({text: 'Gender', value: 'gender',
+            new Header({
+              text: 'Password', value: 'password', isCreateOnly: true,
+              isUpdateOnly: true
+            }),
+            new Header({
+              text: 'Gender', value: 'gender',
               type: "select",
               defaultAmount: "none",
               items: [

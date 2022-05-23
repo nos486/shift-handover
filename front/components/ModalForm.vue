@@ -18,8 +18,8 @@
                       :color="$store.getters['app/baseColor']" :disabled="item.isReadOnly"></v-switch>
           </div>
 
-          <DateSelector v-if="item.type === Date" v-model="form[item.value]" :title="item.text"
-                        :is-modal-show="isModalShow" :disabled="item.isReadOnly">
+          <DateSelector v-if="item.type === Date || item.type === 'DateTime'" v-model="form[item.value]" :title="item.text"
+                        :is-modal-show="isModalShow" :disabled="item.isReadOnly" :is-date-time="item.type === 'DateTime'">
           </DateSelector>
 
           <ItemSelector v-if="item.type === 'select'" v-model="form[item.value]"

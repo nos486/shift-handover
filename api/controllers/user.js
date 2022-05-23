@@ -15,7 +15,8 @@ module.exports = {
     authenticate,
     getUsersPagination,
     deleteUsers,
-    updateUser
+    updateUser,
+    getUserByIdError
     // refreshToken,
     // deleteRefreshToken,
     // getAll,
@@ -164,6 +165,24 @@ async function updateUser(query) {
 
     await userQuery.save()
     return userQuery
+}
+
+async function getUserById(userId){
+    return userModel.findOne({_id : userId})
+}
+
+async function getUserByIdError(userId,nullCheck=true) {
+    if (nullCheck && (userId == null) ) throw "user is null"
+
+    if(userId == null){
+        return null
+    }else {
+        let query = await userModel.findOne({_id: userId})
+        if (query === null) {
+            throw "user not find"
+        }
+        return query
+    }
 }
 
 

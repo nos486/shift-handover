@@ -2,6 +2,28 @@ import {Header} from "./Header";
 import headers from "@/menu";
 
 export class Menu {
+  get removable() {
+    return this._removable;
+  }
+
+  set removable(value) {
+    this._removable = value;
+  }
+
+  get editable() {
+    return this._editable;
+  }
+
+  set editable(value) {
+    this._editable = value;
+  }
+  get headersJson() {
+    return this._headersJson;
+  }
+
+  set headersJson(value) {
+    this._headersJson = value;
+  }
 
 
   /**
@@ -13,10 +35,24 @@ export class Menu {
    * @param {String} icon
    * @param {String} to
    * @param {Boolean} isReadOnly
+   * @param {Boolean} editable
+   * @param {Boolean} removable
    * @param {Menu[]} items
    * @param {Header[]} headers
    */
-  constructor({parent = null, value, key = undefined, title, icon = "", to = undefined, isReadOnly = false, items = [], headers = []}) {
+  constructor({
+                parent = null,
+                value,
+                key = undefined,
+                title,
+                icon = "",
+                to = undefined,
+                isReadOnly = false,
+                editable = true,
+                removable = true,
+                items = [],
+                headers = []
+              }) {
     this._parent = parent
     this._value = value
     this._key = key
@@ -24,6 +60,8 @@ export class Menu {
     this._icon = icon
     this._to = to
     this._isReadOnly = isReadOnly
+    this._editable = editable
+    this._removable = removable
     this._items = []
     this._itemsJson = {}
     this._headers = []
@@ -150,6 +188,8 @@ export class Menu {
       icon: this._icon,
       to: this._to,
       isReadOnly: this._isReadOnly,
+      editable: this._editable,
+      removable: this._removable,
       items: [],
       headers: []
     }

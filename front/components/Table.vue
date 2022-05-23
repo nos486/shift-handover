@@ -53,7 +53,7 @@
           <v-icon small class="mr-1">mdi-clock</v-icon>
           {{secondToString(item[row.slot])}}
         </div>
-        <div v-if="row.type === Date && item[row.slot]!== undefined && item[row.slot]!== null" :set="date = new Date(item[row.slot])"
+        <div v-if="row.type === 'DateTime' && item[row.slot]!== undefined && item[row.slot]!== null" :set="date = new Date(item[row.slot])"
              class="d-flex flex-column align-start">
           <div class="d-flex align-center justify-center">
             <!--          <v-icon small :color="$store.getters['app/baseColor']">mdi-calendar</v-icon>-->

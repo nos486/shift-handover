@@ -12,7 +12,7 @@ export const getters = {
     return state.service
   },
   user: state => {
-    return state.domain
+    return state.user
   },
 }
 
@@ -24,7 +24,7 @@ export const mutations = {
     state.service = value
   }),
   user: ((state, value) => {
-    state.domain = value
+    state.user = value
   }),
 
 }

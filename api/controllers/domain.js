@@ -6,7 +6,9 @@ module.exports = {
     getDomains,
     getDomainsPagination,
     deleteDomains,
-    updateDomain
+    updateDomain,
+    getDomainById,
+    getDomainByIdError
 }
 
 async function addDomain({name, manager}) {
@@ -89,4 +91,23 @@ async function updateDomain(query) {
 
     await domain.save()
     return domain
+}
+
+
+async function getDomainById(userId) {
+    return domainModel.findOne({_id: userId});
+}
+
+async function getDomainByIdError(id,nullCheck=true) {
+    if (nullCheck && id == null) throw "user is null"
+
+    if(id == null){
+        return null
+    }else {
+        let query = await domainModel.findOne({_id: id})
+        if (query === null) {
+            throw "domain not find"
+        }
+        return query
+    }
 }

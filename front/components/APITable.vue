@@ -17,10 +17,10 @@
       <Table ref="table" :headers="menu.headers" :items="data" :loading="loading" :total="total"
              :filter-click="filterClick" @update="update">
         <template slot="actions" slot-scope="{item}">
-          <v-btn v-if="editable" icon @click="showEditModal(item)" color="green">
+          <v-btn v-if="menu.editable" icon @click="showEditModal(item)" color="green">
             <v-icon small>mdi-pencil</v-icon>
           </v-btn>
-          <v-btn v-if="removable" icon color="red" @click="showAlertModal(item)">
+          <v-btn v-if="menu.removable" icon color="red" @click="showAlertModal(item)">
             <v-icon small class="align-self-center">mdi-delete</v-icon>
           </v-btn>
         </template>
@@ -45,14 +45,6 @@ export default {
       default: () => {
         return []
       },
-    },
-    editable: {
-      type: Boolean,
-      default: true
-    },
-    removable: {
-      type: Boolean,
-      default: true
     },
     createData : {
       default: ()=>{

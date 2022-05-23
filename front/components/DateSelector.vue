@@ -2,8 +2,8 @@
   <div class="d-flex justify-space-between rounded-pill pa-2 div-hover custom-input" >
     <div class="align-self-center grey--text text--darken-2 ml-4 mr-2" style="font-size: 16px">{{ title }}</div>
     <div @click="show=true" class="d-flex flex-fill align-center">
-      <div v-if="date !== null" class="ml-2 flex-fill text-left">
-        {{ date.toLocaleString() }}
+      <div v-if="date !== ''" class="ml-2 flex-fill text-left">
+        {{ isDateTime ? date.toLocaleString() : date.toDateString() }}
       </div>
       <div v-else class="ml-2 flex-fill text-left grey--text">
 
@@ -15,11 +15,11 @@
 
     <PersianDatePicker v-model="date" :color="$colorCode($store.getters['app/baseColor'])"
                        locale="en,fa"
-                       type="datetime"
+                       :type="isDateTime ? 'datetime' : 'date'"
                        append-to="body"
                        custom-input="#my-custom-editable-input"
                        :show="show"
-                       format="YYYY/M/D HH:MM"
+                       :format="isDateTime? 'YYYY/M/D HH:MM' : 'YYYY/M/D'"
                        @close="show=false"
                        @change="dateChange"
                        :timezone="false"
@@ -49,6 +49,10 @@ export default {
       type: Boolean,
       default: false
     },
+    isDateTime :{
+      type: Boolean,
+      default: false
+    },
   },
   data: () => {
     return {
@@ -70,14 +74,14 @@ export default {
           this.set()
       },
     },
-    // isModalShow: {
-    //   immediate: true,
-    //   handler(newVal, oldVal) {
-    //     if (newVal) {
-    //       this.set()
-    //     }
-    //   },
-    // },
+    isModalShow: {
+      immediate: true,
+      handler(newVal, oldVal) {
+        if (newVal) {
+          this.set()
+        }
+      },
+    },
     show: function (val) {
       if(this.value == null){
         this.date = new Date()
