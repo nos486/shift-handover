@@ -99,7 +99,7 @@ async function getDomainById(userId) {
 }
 
 async function getDomainByIdError(id,nullCheck=true) {
-    if (nullCheck && id == null) throw "user is null"
+    if (nullCheck && id == null) throw "domain is null"
 
     if(id == null){
         return null
