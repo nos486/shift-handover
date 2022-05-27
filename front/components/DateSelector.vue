@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex justify-space-between rounded-pill pa-2 div-hover custom-input" >
     <div class="align-self-center grey--text text--darken-2 ml-4 mr-2" style="font-size: 16px">{{ title }}</div>
-    <div @click="show=true" class="d-flex flex-fill align-center">
+    <div @click="openPicker" class="d-flex flex-fill align-center">
       <div v-if="date !== ''" class="ml-2 flex-fill text-left">
         {{ isDateTime ? date.toLocaleString() : date.toDateString() }}
       </div>
@@ -85,12 +85,15 @@ export default {
     show: function (val) {
       if(this.value == null){
         this.date = new Date()
+        this.$emit('input', new Date(this.date).toISOString())
       }
     },
   },
   methods: {
+    openPicker(){
+      this.show=true
+    },
     set: function () {
-      console.log("daata set",this.value)
       this.date = ""
       if (this.value !== null) {
         this.date = new Date(this.value)
@@ -108,9 +111,7 @@ export default {
       this.$emit('input', null)
     },
     dateChange: function (val) {
-      // if(this.date !== "") this.$emit('input', new Date(val).getTime() / 1000)
       this.$emit('input', new Date(this.date).toISOString())
-
     },
   }
 }
