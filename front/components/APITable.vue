@@ -1,5 +1,5 @@
 <template>
-  <Loading padding="16px" :loading="loading">
+  <Loading class="pa-5" :loading="loading">
     <div class="d-flex flex-column">
 
       <ModalForm ref="addModal" class="mb-5" title="New" icon="mdi-plus" v-model="defaultData" :items="menu.headers"
