@@ -54,6 +54,13 @@ async function getShiftsPagination(query) {
         }
     }
 
+    if (query.fromDate !== undefined){
+        query.date = {
+            $gte: startOfDay(new Date(query.fromDate)),
+            $lte: endOfDay(new Date(query.toDate))
+        }
+    }
+
     return {
         itemsPerPage: pagination.itemsPerPage,
         page: pagination.page,
@@ -67,7 +74,6 @@ async function deleteShifts(ids,checkIsOwn=true,userId=null) {
     let result = []
     for (let id of ids) {
         let shift = await shiftModel.findOne({_id: id});
-        console.log(shift.operator.toString() , userId)
         if (checkIsOwn && shift.operator.toString() !== userId){
             throw `you can't remove others shift`
         }

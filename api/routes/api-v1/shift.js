@@ -35,13 +35,15 @@ function add(req, res, next) {
 
 
 function viewSchema(req, res, next) {
-
     const schema = Joi.object({
         _id: Joi.objectId().optional(),
         date : Joi.date().optional(),
+        fromDate : Joi.date().optional(),
+        toDate : Joi.date().when('fromDate', { is: Joi.exist(), then: Joi.required(), otherwise: Joi.optional() }),
         isDay : Joi.bool().optional(),
         operator: Joi.objectId().optional(),
         domain: Joi.objectId().optional(),
+        selfDomain : Joi.boolean().optional(),
         itemsPerPage: Joi.number().optional(),
         page: Joi.number().optional(),
         sortBy: Joi.string().optional(),
@@ -51,6 +53,7 @@ function viewSchema(req, res, next) {
 }
 
 function get(req, res, next) {
+    if (req.query.selfDomain) req.query.domain = req.user.domain
     shiftController.getShiftsPagination(req.query).then((event) => {
         res.json(event)
     }).catch(next);
