@@ -1,11 +1,10 @@
 <template>
   <div>
     <APITable :menu="menu">
-      <template slot="item.domainName" slot-scope="{item}">
+      <template slot="item.domain" slot-scope="{item}">
         <v-chip small :color="$store.getters['app/baseColor']" dark >
-          {{item.domainName}}
+          {{item.domain.name}}
         </v-chip>
-
       </template>
     </APITable>
   </div>

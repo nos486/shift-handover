@@ -2,7 +2,7 @@
   <Loading class="pa-5" :loading="loading">
     <div class="d-flex flex-column">
 
-      <ModalForm ref="addModal" class="mb-5" title="New" icon="mdi-plus" v-model="defaultData" :items="menu.headers"
+      <ModalForm v-if="!readOnly" ref="addModal" class="mb-5" title="New" icon="mdi-plus" v-model="defaultData" :items="menu.headers"
                  @save="addNewItemToServer" @show="setDefaultData" :loading="loading">
       </ModalForm>
 
@@ -55,6 +55,14 @@ export default {
       default: ()=>{
         return {}
       }
+    },
+    getDataExtraHeaders : {
+      default: ()=>{
+        return {}
+      }
+    },
+    readOnly : {
+      default : false
     }
   },
   data: () => {
@@ -88,7 +96,10 @@ export default {
       console.log(headers)
       this.$store.dispatch("services/global/get", {
         pathName: this.menu.value,
-        header: headers
+        header: {
+          ...headers,
+          ...this.getDataExtraHeaders
+        }
       }).then((res) => {
         this.data = res.result
         this.total = res.total
@@ -149,6 +160,8 @@ export default {
       for (let header of this.menu.headers) {
         if (header.defaultAmount !== undefined) editData[header.value] = header.defaultAmount
         if ((!header.isReadOnly)) editData[header.value] = item[header.value]
+        if( header.IOKey !== undefined) editData[header.value] = item[header.value][header.IOKey]
+        // if( header.IOKey !== undefined) console.log("here",item[header.value][header.IOKey])
         if (header.value === "id") editData._id = item["id"]
       }
       this.editData = JSON.parse(JSON.stringify(editData))

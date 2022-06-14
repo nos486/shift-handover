@@ -18,7 +18,6 @@ export default function ({$axios, store, route, app}) {
         app.router.push("/login")
       } else {
         if (error.config.alert !== false || error.config.alert === undefined) {
-          console.log(error.config.alert,error.config.alert)
           store.commit("alert/error", error.response.data.message)
         }
         return Promise.reject(error.response.data);

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <APITable :menu="menu">
+    <APITable ref="api" :menu="menu" :get-data-extra-headers="(allDomains) ? {} : $store.getters['services/user/domain'] !== '' ? {'domain':$store.getters['services/user/domain']} :{'selfDomain':true}">
       <template slot="item.date" slot-scope="{item}">
         {{ new Date(item.date).toDateString() }}
       </template>
@@ -18,17 +18,20 @@
       </template>
 
 
-      <template slot="item.operatorName" slot-scope="{item}">
+      <template slot="item.operator" slot-scope="{item}">
         <v-chip small :color="$store.getters['app/baseColor']" dark>
-          {{ item.operatorName }}
+          {{ item.operator.username }}
         </v-chip>
       </template>
 
-      <template slot="item.domainName" slot-scope="{item}">
+      <template slot="item.domain" slot-scope="{item}">
         <v-chip small color="green" dark>
-          {{ item.domainName }}
+          {{ item.domain.name }}
         </v-chip>
+      </template>
 
+      <template slot="item.handoverTo" slot-scope="{item}">
+        {{(item.handoverTo !== undefined) ? item.handoverTo.username : "-" }}
       </template>
     </APITable>
   </div>
@@ -39,11 +42,29 @@ import menu from "@/menu";
 
 export default {
   name: "ShiftCheck",
+  props: {
+    allDomains: {
+      type : Boolean,
+      default: false
+    }
+  },
   data: () => {
     return {
       menu: menu.getItem("shift"),
     }
   },
+  computed : {
+    domain : function (){
+      return this.$store.getters['services/user/domain']
+    }
+  },
+  watch : {
+    domain : function (){
+      this.$nextTick(()=>{
+        this.$refs.api.getData()
+      })
+    }
+  }
 }
 </script>
 

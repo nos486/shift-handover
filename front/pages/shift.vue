@@ -1,7 +1,6 @@
 <template>
   <div>
-    <ShiftCheck ></ShiftCheck>
-
+    <ShiftCheck></ShiftCheck>
     <div class="d-flex flex-column pa-4">
       <div class="title mb-2">
         <v-icon>mdi-calendar</v-icon>

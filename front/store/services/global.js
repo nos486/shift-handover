@@ -142,8 +142,11 @@ export const actions = {
     let pathName = payload.pathName
     delete payload.pathName
 
+    let data = payload
+    if (payload.array) data = payload.array
+
     return new Promise((resolve, reject) => {
-      this.$axios.post(`/${pathName}`, payload).then((response) => {
+      this.$axios.post(`/${pathName}`, data).then((response) => {
         resolve(response.data);
       }).catch(err => {
         reject(err);

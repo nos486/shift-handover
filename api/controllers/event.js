@@ -2,6 +2,7 @@ const eventModel = require('./../models/SpecialEvent')
 const userController = require("./user")
 const domainController = require("./domain")
 const serviceController = require("./service")
+const {queryPaginationHandler} = require("../helper/utils");
 
 module.exports = {
     addEvent,
@@ -38,29 +39,6 @@ async function addEvent({
         }
     }
 
-    let affectedDomainsNames = []
-    if (affectedDomains !== undefined) {
-        for (let item of affectedDomains) {
-            let affectedDomainsQuery = await domainController.getDomains({_id: item})
-            if (affectedDomainsQuery.length === 0) {
-                throw "affected domain/s not find"
-            } else {
-                affectedDomainsNames.push(affectedDomainsQuery[0].name)
-            }
-        }
-    }
-
-    let affectedServicesNames = []
-    if (affectedServices !== undefined) {
-        for (let item of affectedServices) {
-            let affectedServicesQuery = await serviceController.getServices({_id: item})
-            if (affectedServicesQuery.length === 0) {
-                throw "affected domain/s not find"
-            } else {
-                affectedServicesNames.push(affectedServicesQuery[0].name)
-            }
-        }
-    }
 
     return await eventModel.create({
         title,
@@ -68,34 +46,32 @@ async function addEvent({
         status,
         severity,
         reporter,
-        reporterName: reporterQuery.username,
         startTime,
         endTime,
         outageStartTime,
         outageEndTime,
         outage: (outageEndTime !== null && outageStartTime!== null) ? ((new Date(outageEndTime) - new Date(outageStartTime)) / 1000).toFixed(0) : 0,
         affectedDomains,
-        affectedDomainsNames,
         affectedServices,
-        affectedServicesNames,
         domain,
-        domainName: (domain !== null) ? domainQuery[0].name : ""
     })
 
 }
 
 async function getEventsPagination(query) {
-    let page = (query.page !== undefined) ? Math.max(1, query.page) : 1
-    let itemsPerPage = (query.itemsPerPage !== undefined) ? Math.max(1, query.itemsPerPage) : 5
-    let sortBy = (query.sortBy !== undefined) ? {[query.sortBy]: (query.sortDesc === "true" ? 1 : -1)} : {"createdAt":-1}
+    let pagination = queryPaginationHandler(query)
 
     if ("title" in query) query["title"] = {'$regex': `${query["title"]}`, '$options': 'i'}
 
     return {
-        itemsPerPage,
-        page,
+        itemsPerPage : pagination.itemsPerPage,
+        page : pagination.page,
         total : await eventModel.count(query),
-        result: await eventModel.find(query).sort(sortBy).limit(itemsPerPage).skip((page - 1)*itemsPerPage)
+        result: await eventModel.find(query).populate({
+            path: 'reporter',
+            // Get friends of friends - populate the 'friends' array for every friend
+            populate: { path: 'domain' }
+        }).populate("domain").populate("affectedDomains").populate("affectedServices").sort(pagination.sortBy).limit(pagination.itemsPerPage).skip((pagination.page - 1)*pagination.itemsPerPage)
     }
 }
 

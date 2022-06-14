@@ -2,9 +2,13 @@ const crModel = require('./../models/CR')
 const userController = require("./user")
 const domainController = require("./domain")
 const {queryPaginationHandler} = require("../helper/utils");
+const mongoose = require("mongoose");
+const endOfDay  = require('date-fns/endOfDay')
+const startOfDay = require('date-fns/startOfDay')
 
 module.exports = {
     addCR,
+    addCRs,
     getCrsPagination,
     getCrs,
     deleteCrs,
@@ -12,42 +16,63 @@ module.exports = {
 }
 
 async function addCR({
-                         crNumber,
-                         reporter,
+                         title,
+                         orderId,
+                         domain,
                          startTime,
                          endTime,
                          outageStartTime,
                          outageEndTime,
-                         title,
-                         domain,
-                         executer,
-                         workGroup,
+                         reporter,
                          status
                      }) {
 
 
-    let reporterQuery = await userController.getUserByIdError(reporter)
+    await crModel.findOne({orderId}).then((cr)=>{
+        if (cr !== null) throw "Order Id is exist"
+    })
+
+    // let reporterQuery = await userController.getUserByIdError(reporter)
     let domainQuery = await domainController.getDomainByIdError(domain)
 
 
     return await crModel.create({
-        crNumber,
-        reporter,
-        reporterName: reporterQuery.username,
+        title,
+        orderId,
+        domain,
         startTime,
         endTime,
         outageStartTime,
         outageEndTime,
-        outage: (outageEndTime !== null && outageStartTime !== null) ? ((new Date(outageEndTime) - new Date(outageStartTime)) / 1000).toFixed(0) : 0,
-        title,
-        domain,
-        domainName: (domain !== null) ? domainQuery.name : "",
-        executer,
-        workGroup,
+        reporter,
         status
     })
 
 }
+
+async function addCRs(list){
+    let results = []
+    for(let crData of list){
+        await addCR({
+            title:crData.title,
+            orderId:crData.orderId,
+            domain:crData.domain,
+            startTime:crData.startTime,
+            endTime:crData.endTime,
+            outageStartTime:crData.outageStartTime,
+            outageEndTime:crData.outageEndTime,
+            reporter:crData.reporter,
+            status:crData.status,
+        }).then((result)=>{
+            results.push(result)
+        }).catch((e)=>{
+            results.push(e)
+        })
+    }
+
+    return results
+}
+
 
 async function getCrsPagination(query) {
 
@@ -55,11 +80,21 @@ async function getCrsPagination(query) {
 
     if ("title" in query) query["title"] = {'$regex': `${query["title"]}`, '$options': 'i'}
 
+    console.log(query)
+    if (query.startTime) query.startTime = {$gte: startOfDay(new Date(query.startTime))}
+    //
+    // if (query.startTime !== undefined){
+    //     query.date = {
+    //         $gte: startOfDay(new Date(query.date)),
+    //         $lte: endOfDay(new Date(query.date))
+    //     }
+    // }
+
     return {
         pagination : pagination.itemsPerPage,
         page: pagination.page,
         total: await crModel.count(query),
-        result: await crModel.find(query).sort(pagination.sortBy).limit(pagination.itemsPerPage).skip((pagination.page - 1) * pagination.itemsPerPage)
+        result : await crModel.find(query).populate("reporter").populate("domain").sort(pagination.sortBy).limit(pagination.itemsPerPage).skip((pagination.page - 1) * pagination.itemsPerPage)
     }
 }
 
@@ -87,13 +122,6 @@ async function updateCr(query) {
     for (const [key, value] of Object.entries(query)) {
         cr[key] = value
     }
-    console.log(query.startTime)
-    if (query.outageEndTime !== undefined && query.outageStartTime !== undefined) {
-        cr.outage = ((new Date(query.outageEndTime) - new Date(query.outageStartTime)) / 1000).toFixed(0)
-    } else {
-        cr.outage = 0
-    }
-    cr.domainName = (query.domain !== undefined) ? domainQuery.name : ""
 
     await cr.save()
     return cr

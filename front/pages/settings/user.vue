@@ -1,6 +1,10 @@
 <template>
   <div>
-    <APITable :menu="menu"></APITable>
+    <APITable :menu="menu">
+      <template slot="item.domain" slot-scope="{item}">
+        {{ item.domain.name }}
+      </template>
+    </APITable>
   </div>
 </template>
 

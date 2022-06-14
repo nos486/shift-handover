@@ -2,17 +2,16 @@ const mongoose = require("mongoose")
 
 const schema = new mongoose.Schema(
     {
-        crNumber: {
+        title: {
             type: String,
         },
-        reporter: {
+        orderId: {
+            type: String,
+            unique: true,
+        },
+        domain: {
             type: mongoose.Types.ObjectId,
-            ref: "User",
-            require: true
-        },
-        reporterName: {
-            type: String,
-            require: true
+            ref: 'Domain'
         },
         startTime: {
             type: Date,
@@ -28,27 +27,14 @@ const schema = new mongoose.Schema(
         outageEndTime: {
             type: Date,
         },
-        outage : {
-            type: String,
-        },
-        title: {
-            type: String,
-        },
-        domain: {
+        reporter: {
             type: mongoose.Types.ObjectId,
-            ref: 'Domain'
-        },
-        domainName: {
-            type: String,
-        },
-        executer: {
-            type: String,
-        },
-        workGroup: {
-            type: String,
+            ref: "User",
+            require: true
         },
         status: {
             type: String,
+            default : "ongoing"
         },
     },
     {timestamps: true},

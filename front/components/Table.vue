@@ -51,7 +51,7 @@
         </div>
         <div v-if="row.type === 'second'" class="d-flex align-center">
           <v-icon small class="mr-1">mdi-clock</v-icon>
-          {{secondToString(item[row.slot])}}
+          {{$secondToString(item[row.slot])}}
         </div>
         <div v-if="row.type === 'DateTime' && item[row.slot]!== undefined && item[row.slot]!== null" :set="date = new Date(item[row.slot])"
              class="d-flex flex-column align-start">
@@ -159,21 +159,6 @@ export default {
       this.$refs['editDialog'].forEach((dialog) => {
         dialog.cancel()
       })
-    },
-    secondToString(value){
-      if(value < 60){
-        return `${value}s`
-      }else {
-        if(value < 60*60){
-          return `${(value/60).toFixed(0)}m`
-        }else {
-          if(value < 60*60*60){
-            return `${(value/(60*60)).toFixed(0)}h`
-          }else {
-            return `${(value/(60*60*24)).toFixed(0)}d`
-          }
-        }
-      }
     },
     getOptions(){
       return this.options

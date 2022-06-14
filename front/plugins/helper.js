@@ -16,6 +16,25 @@ export default (context, inject) => {
   context.$dirc = dirc
 
 
+  const secondToString = (value)=>{
+    if(value < 60){
+      return `${value}s`
+    }else {
+      if(value < 60*60){
+        return `${(value/60).toFixed(0)}m`
+      }else {
+        if(value < 60*60*60){
+          return `${(value/(60*60)).toFixed(0)}h`
+        }else {
+          return `${(value/(60*60*24)).toFixed(0)}d`
+        }
+      }
+    }
+  }
+  inject('secondToString', secondToString)
+  context.$secondToString = secondToString
+
+
   // direction check
   const colorCode = (color) => {
     let colors = {

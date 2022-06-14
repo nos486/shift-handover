@@ -19,7 +19,7 @@
     <div v-if="!fill" :class="{'grey lighten-4 pa-3':background,'px-5 py-5 overflow-auto':!background}" >
       <slot></slot>
     </div>
-    <div v-else class="py-5 overflow-auto" >
+    <div v-else class="overflow-auto" >
       <slot></slot>
     </div>
 

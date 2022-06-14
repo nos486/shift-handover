@@ -4,7 +4,7 @@ const domainModel = require('./../models/Domain')
 const tokenController = require("./token")
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const {randomString} = require("../helper/utils");
+const {randomString, queryPaginationHandler} = require("../helper/utils");
 
 module.exports = {
     hasUsername,
@@ -44,15 +44,9 @@ async function createUser({username, email,firstname,lastName,phoneNumber,domain
         throw "Email exist"
     }
 
-    let domainName = ""
-    if(domain !== null && domain !== undefined){
-        let domainQuery = await domainModel.findById(domain)
-        if (domainQuery === null) {
-            throw "domain not find"
-        }else {
-            domainName = domainQuery.name
-        }
-    }
+    await domainModel.findById(domain).then((query)=>{
+        if (query !== null) throw "domain not find"
+    })
 
     let user = new userModel({
         username,
@@ -61,7 +55,6 @@ async function createUser({username, email,firstname,lastName,phoneNumber,domain
         lastName,
         phoneNumber,
         domain,
-        domainName,
         role,
         gender,
         about,
@@ -74,18 +67,18 @@ async function createUser({username, email,firstname,lastName,phoneNumber,domain
 
 
 async function findUserById(userId){
-    return userModel.findOne({_id : userId})
+    return userModel.findOne({_id : userId}).populate("domain")
 }
 
 async function findUserByUsername(username){
-    return userModel.findOne({username})
+    return userModel.findOne({username}).populate("domain")
 }
 
 
 async function authenticate({ username, password, ipAddress }) {
     username = username.toLowerCase()
 
-    const user = await userModel.findOne({ username });
+    const user = await userModel.findOne({ username }).populate("domain");
 
     if (!user || !bcrypt.compareSync(password, user.password)) {
         throw 'Username or password is incorrect';
@@ -110,15 +103,13 @@ async function authenticate({ username, password, ipAddress }) {
 async function getUsersPagination(query) {
     if ("name" in query) query["name"] = {'$regex' : `${query["name"]}`, '$options' : 'i'}
 
-    let page = (query.page !== undefined) ? Math.max(1, query.page) : 1
-    let itemsPerPage = (query.itemsPerPage !== undefined) ? Math.max(1, query.itemsPerPage) : 5
-    let sortBy = (query.sortBy !== undefined) ? {[query.sortBy]: (query.sortDesc === "true" ? 1 : -1)} : "createdAt"
+    let pagination = queryPaginationHandler(query)
 
     return {
-        itemsPerPage,
-        page,
+        itemsPerPage : pagination.itemsPerPage,
+        page: pagination.page,
         total : await userModel.count(query),
-        result: await userModel.find(query).sort(sortBy).limit(itemsPerPage).skip((page - 1)*itemsPerPage)
+        result: await userModel.find(query).populate("domain").sort(pagination.sortBy).limit(pagination.itemsPerPage).skip((pagination.page - 1)*pagination.itemsPerPage)
     }
 }
 
@@ -132,15 +123,6 @@ async function deleteUsers(ids) {
 
 async function updateUser(query) {
 
-    let domainName = ""
-    if(query.domain !== null && query.domain !== undefined){
-        let domainQuery = await domainModel.findById(query.domain)
-        if (domainQuery === null) {
-            throw "domain not find"
-        }else {
-            domainName = domainQuery.name
-        }
-    }
 
     let userQuery = await userModel.findOne({_id: query._id});
     delete query._id
@@ -159,7 +141,6 @@ async function updateUser(query) {
     for (const [key, value] of Object.entries(query)) {
         userQuery[key] = value
     }
-    userQuery.domainName = domainName
 
     if (query.password !== undefined) userQuery.password = bcrypt.hashSync(query.password, 10)
 

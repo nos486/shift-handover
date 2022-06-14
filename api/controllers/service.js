@@ -1,5 +1,7 @@
 const serviceModel = require('./../models/Service')
 const domainModel = require('./../models/Domain')
+const {queryPaginationHandler} = require("../helper/utils");
+const domainController = require("./domain");
 
 module.exports = {
     addService,
@@ -15,19 +17,11 @@ async function addService({name, domain}) {
         if (service !== null) throw "Service name exist"
     })
 
-    let domainName = ""
-    await domainModel.findById(domain).then((domain) => {
-        if (domain === null) {
-            throw "domain not exist"
-        }else {
-            domainName = domain.name
-        }
-    })
+    await domainController.getDomainByIdError(domain)
 
     return await serviceModel.create({
         name,
-        domain,
-        domainName
+        domain
     })
 }
 
@@ -38,15 +32,13 @@ async function getServices(query) {
 
 async function getServicePagination(query) {
 
-    let page = (query.page !== undefined) ? Math.max(1, query.page) : 1
-    let itemsPerPage = (query.itemsPerPage !== undefined) ? Math.max(1, query.itemsPerPage) : 5
-    let sortBy = (query.sortBy !== undefined) ? {[query.sortBy]: (query.sortDesc === "true" ? 1 : -1)} : {"createdAt":-1}
+    let pagination = queryPaginationHandler(query)
 
     return {
-        itemsPerPage,
-        page,
+        itemsPerPage: pagination.itemsPerPage,
+        page : pagination.page,
         total : await serviceModel.count(query),
-        result: await serviceModel.find(query).sort(sortBy).limit(itemsPerPage).skip((page - 1)*itemsPerPage)
+        result: await serviceModel.find(query).populate("domain").sort(pagination.sortBy).limit(pagination.itemsPerPage).skip((pagination.page - 1)*pagination.itemsPerPage)
     }
 }
 
@@ -68,21 +60,25 @@ async function updateService(query) {
         if (query !== null && service.name !== query.name) throw "Service name exist"
     })
 
-    let domainName = ""
-    await domainModel.findById(query.domain).then((domain) => {
-        if (domain === null) {
-            throw "domain not exist"
-        }else {
-            domainName = domain.name
-        }
-    })
-
     for (const [key, value] of Object.entries(query)) {
         service[key] = value
     }
 
-    service.domainName = domainName
-
     await service.save()
     return service
+}
+
+
+async function getServiceByIdError(id,nullCheck=true) {
+    if (nullCheck && id == null) throw "service is null"
+
+    if(id == null){
+        return null
+    }else {
+        let query = await serviceModel.findOne({_id: id})
+        if (query === null) {
+            throw "service not find"
+        }
+        return query
+    }
 }

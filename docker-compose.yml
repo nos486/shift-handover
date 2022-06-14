@@ -11,6 +11,7 @@ services:
       - ./api:/app
     environment:
       SECRET: supersecret
+      TZ : "Asia/Tehran"
     working_dir: /app
     command: bash -c "npm install && npm start"
     networks:

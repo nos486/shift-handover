@@ -1,4 +1,11 @@
 export class Header {
+  get defaultQuery() {
+    return this._defaultQuery;
+  }
+
+  set defaultQuery(value) {
+    this._defaultQuery = value;
+  }
   get isUpdateOnly() {
     return this._isUpdateOnly;
   }
@@ -83,7 +90,7 @@ export class Header {
                 items = undefined,
                 itemHeader = undefined,
                 itemKey = undefined,
-                IOKey = "id",
+                IOKey = undefined,
                 IOName = "name",
                 slot = undefined,
                 defaultAmount = undefined,
@@ -93,6 +100,7 @@ export class Header {
                 searchHeader = undefined,
                 searchOn = undefined,
                 defaultSearch = {},
+                defaultQuery = {},
                 isDefaultFilter = false,
                 rules = {},
                 width = undefined,
@@ -118,6 +126,7 @@ export class Header {
     this._updatePath = updatePath
     this._searchHeader = searchHeader
     this._defaultSearch = defaultSearch
+    this._defaultQuery = defaultQuery
     this._searchOn = searchOn
     this._isDefaultFilter = isDefaultFilter
     this._rules = rules;
@@ -263,6 +272,8 @@ export class Header {
       isCreateOnly: this._isCreateOnly,
       isFilterable: this._isFilterable,
       isMultiple: this._isMultiple,
+      IOKey: this._IOKey,
+      IOName: this._IOName,
       type: this._type,
       items: this._items,
       rules: this._rules,
@@ -270,6 +281,7 @@ export class Header {
       updatePath: this._updatePath,
       searchHeader: this._searchHeader,
       defaultSearch : this._defaultSearch,
+      defaultQuery : this._defaultQuery,
       isDefaultFilter: this._isDefaultFilter,
       defaultAmount: this._defaultAmount,
       searchOn: this._searchOn,

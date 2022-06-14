@@ -12,6 +12,7 @@ const {ROLE} = require("../../models/enums");
 const router = express.Router();
 router.post("/", authorize(ROLE.ADMIN),addDomainSchema, addDomain)
 router.get("/", authorize(),viewDomainSchema, getDomains)
+router.get("/all", authorize(), getAllDomains)
 router.delete("/", authorize(ROLE.ADMIN),deleteDomainSchema, deleteDomains)
 router.put("/", authorize([ROLE.ADMIN]),updateDomainSchema, updateDomain)
 
@@ -47,6 +48,12 @@ function viewDomainSchema(req, res, next) {
 
 function getDomains(req, res, next) {
     domainController.getDomainsPagination(req.query).then((domains) => {
+        res.json(domains)
+    }).catch(next)
+}
+
+function getAllDomains(req, res, next) {
+    domainController.getDomains(req.query).then((domains) => {
         res.json(domains)
     }).catch(next)
 }

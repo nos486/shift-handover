@@ -3,7 +3,8 @@
     <div class="align-self-center grey--text text--darken-2 ml-4 mr-2" style="font-size: 16px">{{ title }}</div>
     <div @click="openPicker" class="d-flex flex-fill align-center">
       <div v-if="date !== ''" class="ml-2 flex-fill text-left">
-        {{ isDateTime ? date.toLocaleString() : date.toDateString() }}
+        {{ isDateTime ? date.toLocaleString() : date.toLocaleDateString() }}
+
       </div>
       <div v-else class="ml-2 flex-fill text-left grey--text">
 
@@ -19,10 +20,10 @@
                        append-to="body"
                        custom-input="#my-custom-editable-input"
                        :show="show"
-                       :format="isDateTime? 'YYYY/M/D HH:MM' : 'YYYY/M/D'"
+                       :format="isDateTime? 'YYYY/M/D HH:MM' : 'YYYY/M/D HH:MM'"
                        @close="show=false"
                        @change="dateChange"
-                       :timezone="false"
+                       timezone="+4:30"
                        style="position: absolute">
 
     </PersianDatePicker>
@@ -85,7 +86,7 @@ export default {
     show: function (val) {
       if(this.value == null){
         this.date = new Date()
-        this.$emit('input', new Date(this.date).toISOString())
+        this.$emit('input', this.date)
       }
     },
   },
@@ -111,7 +112,9 @@ export default {
       this.$emit('input', null)
     },
     dateChange: function (val) {
-      this.$emit('input', new Date(this.date).toISOString())
+      console.log(this.date.toString())
+      // this.$emit('input', new Date(this.date).toISOString())
+      this.$emit('input', this.date)
     },
   }
 }

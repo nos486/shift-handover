@@ -42,7 +42,7 @@ export const actions = {
 
 
     return new Promise((resolve, reject) => {
-      this.$axios.get(`/${name}${header}`, {}).then((response) => {
+      this.$axios.get(`/${name}${header}?itemsPerPage=100`, {}).then((response) => {
         let result = response.data.result
         context.commit(name, result)
         resolve(result);

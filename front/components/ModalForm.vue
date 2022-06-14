@@ -1,7 +1,7 @@
 <template>
   <validation-observer ref="observer" v-slot="{ invalid }">
-    <Modal v-model="isModalShow" :title="title" :icon="icon" :save-text="isEditableForm ? 'Save' : 'Add'"
-           @save="save" :loading="loading" @show="modalShow" :disable-save="invalid">
+    <Modal v-model="isModalShow" :title="title" :icon="icon" :save-text="saveText !== 'Save' ? saveText : isEditableForm ? saveText : 'Add'"
+           @save="save" :loading="loading" @show="modalShow" :disable-save="invalid" :small-btn="smallBtn" >
       <template v-if="isEditableForm" slot="button">
         <div></div>
       </template>
@@ -13,7 +13,7 @@
         <div v-for="item in items" :key="item.value" class="mb-3"
              v-if="!item.vif && (!(!isEditableForm && !item.isUpdateOnly) || !(item.isHidden && !item.isCreateOnly)) && !item.isReadOnly && !item.isHidden">
           <div v-if="item.type === Boolean" class="d-flex justify-space-between rounded-pill pa-2 div-hover">
-            <div class="align-self-center grey--text text--darken-2 mr-4" style="font-size: 16px">{{ item.text }}</div>
+            <div class="align-self-center grey--text text--darken-2 ml-4" style="font-size: 16px">{{ item.text }}</div>
             <v-switch v-model="form[item.value]" hide-details dense class="ma-0"
                       :color="$store.getters['app/baseColor']" :disabled="item.isReadOnly"></v-switch>
           </div>
@@ -24,7 +24,7 @@
 
           <ItemSelector v-if="item.type === 'select'" v-model="form[item.value]"
                         :items="item.items" :title="item.text" :multiple="item.isMultiple" :disabled="item.isReadOnly"
-                        :is-modal-show="isModalShow" :itemKey="item.itemKey" :search-on="item.searchOn">
+                        :is-modal-show="isModalShow" :itemKey="item.itemKey" :search-on="item.searchOn" :default-query="item.defaultQuery">
           </ItemSelector>
 
           <ValidationProvider v-if="item.type === 'textarea'" :rules="item.rules" v-slot="{ errors }"
@@ -96,6 +96,9 @@ export default {
     items: {
       type: Array,
     },
+    saveText :{
+      default : 'Save'
+    },
     loading: {
       type: Boolean,
       default: false
@@ -103,6 +106,10 @@ export default {
     isEditableForm: {
       type: Boolean,
       default: false
+    },
+    smallBtn: {
+      type: Boolean,
+      default: true
     },
   },
   data: () => {
@@ -128,6 +135,7 @@ export default {
       },
       deep: true
     },
+
 
   },
   mounted() {

@@ -1,11 +1,13 @@
 <template>
   <div class="pa-2">
-    <Form title="Shift Calendar" icon="mdi-calendar" elevation="0" outlined>
-      <ShiftCalendar :all-domains="true"></ShiftCalendar>
+    <ShiftHandover></ShiftHandover>
+    <Form class="mt-4" title="CR Table" icon="mdi-calendar" elevation="0" fill outlined>
+      <CRTable all-domains :query="{startTime:new Date().toISOString()}" :read-only="true"></CRTable>
     </Form>
-    <Form class="mt-4" title="Shift Calendar" icon="mdi-calendar" elevation="0" outlined>
+<!--    <Form class="mt-4" title="Shift Calendar" icon="mdi-calendar" elevation="0" fill>-->
+<!--      <ShiftCalendar :all-domains="true" width="99.9%"></ShiftCalendar>-->
+<!--    </Form>-->
 
-    </Form>
   </div>
 
 </template>
@@ -13,9 +15,11 @@
 <script>
 import ShiftCheck from "~/components/main/shiftCheck";
 import ShiftCalendar from "~/components/main/shiftCalendar";
+import CRTable from "~/components/main/crTable";
+import ShiftHandover from "@/components/main/shiftHandover";
 export default {
   name: 'Main',
-  components: {ShiftCalendar, ShiftCheck},
+  components: {ShiftHandover, CRTable, ShiftCalendar, ShiftCheck},
   mounted() {
 
   }

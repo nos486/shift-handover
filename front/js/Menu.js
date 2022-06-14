@@ -2,6 +2,13 @@ import {Header} from "./Header";
 import headers from "@/menu";
 
 export class Menu {
+  get group() {
+    return this._group;
+  }
+
+  set group(value) {
+    this._group = value;
+  }
   get removable() {
     return this._removable;
   }
@@ -39,6 +46,7 @@ export class Menu {
    * @param {Boolean} removable
    * @param {Menu[]} items
    * @param {Header[]} headers
+   * @param {String[]} group
    */
   constructor({
                 parent = null,
@@ -51,7 +59,8 @@ export class Menu {
                 editable = true,
                 removable = true,
                 items = [],
-                headers = []
+                headers = [],
+                group = []
               }) {
     this._parent = parent
     this._value = value
@@ -65,6 +74,8 @@ export class Menu {
     this._items = []
     this._itemsJson = {}
     this._headers = []
+    this._group = group
+
     this._headersJson = {}
 
     for (let item of items) {

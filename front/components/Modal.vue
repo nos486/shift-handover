@@ -6,7 +6,7 @@
       </div>
       <v-btn v-if="!$slots[ 'button' ]" fab dark :color="$store.getters['app/baseColor']" v-bind="attrs" v-on="on"
              :class="btnClass"
-             elevation="0" :title="title" small>
+             elevation="0" :title="title" :small="smallBtn">
         <v-icon>{{ icon }}</v-icon>
       </v-btn>
     </template>
@@ -47,6 +47,10 @@ export default {
     small: {
       type: Boolean,
       default: false
+    },
+    smallBtn: {
+      type: Boolean,
+      default: true
     },
     saveText: {
       default: "Save"

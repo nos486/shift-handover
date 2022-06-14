@@ -1,4 +1,26 @@
 const mongoose = require("mongoose")
+const {object} = require("joi");
+
+const alarmsSchema = new mongoose.Schema(
+    {
+        critical: {
+            type : Number,
+            default : 0
+        },
+        major: {
+            type : Number,
+            default : 0
+        },
+        miner: {
+            type : Number,
+            default : 0
+        },
+        warning: {
+            type : Number,
+            default : 0
+        }
+    }
+)
 
 const schema = new mongoose.Schema(
     {
@@ -11,21 +33,30 @@ const schema = new mongoose.Schema(
             ref: "User",
             require: true
         },
-        operatorName: {
-            type: String,
-        },
         domain: {
             type: mongoose.Types.ObjectId,
-            ref: 'Domain'
-        },
-        domainName: {
-            type: String,
+            ref: "Domain",
         },
         isDay: {
             type: Boolean,
             default : true
-        }
-
+        },
+        handoverTo: {
+            type: mongoose.Types.ObjectId,
+            ref: "User",
+        },
+        isEnd: {
+            type: Boolean,
+            default : false
+        },
+        acceptedTime: {
+            type: Date,
+            default: null
+        },
+        alarms : {
+            type: alarmsSchema,
+            default: () => ({})
+        },
     },
     {timestamps: true},
 );

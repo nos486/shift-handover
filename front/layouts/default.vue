@@ -10,6 +10,7 @@
       <!--      </v-btn>-->
       <v-toolbar-title v-text="$nuxt.$route.name"/>
       <v-spacer/>
+      <DomainChanger class="mr-3"></DomainChanger>
       <Profile></Profile>
     </v-app-bar>
     <Alert></Alert>

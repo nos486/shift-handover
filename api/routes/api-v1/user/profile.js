@@ -18,10 +18,6 @@ function getSelf(req, res, next) {
 }
 
 function getById(req, res, next) {
-    // regular users can get their own record and admins can get any record
-    // if (req.params.username !== req.user.username) {
-    //     return res.status(403).json({ message: 'Forbidden' });
-    // }
     userController.findUserById(req.params.username).then((user) =>{
         res.json(user)
     }).catch(next);

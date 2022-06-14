@@ -10,6 +10,7 @@ const crController = require("../../controllers/cr");
 
 const router = express.Router();
 router.post("/",authorize(),addSchema, add)
+router.post("/batch",authorize(),addsSchema, adds)
 router.get("/", authorize(),viewSchema, get)
 router.delete("/",authorize(),removeSchema, remove)
 router.put("/", authorize(),updateSchema, update)
@@ -17,15 +18,13 @@ router.put("/", authorize(),updateSchema, update)
 
 function addSchema(req, res, next) {
     const schema = Joi.object({
-        crNumber: Joi.string().required(),
+        orderId: Joi.string().required(),
         startTime: Joi.date().required(),
         endTime: Joi.date().required(),
         outageStartTime: Joi.date().allow(null),
         outageEndTime: Joi.date().optional().allow(null),
         title: Joi.string().required(),
         domain: Joi.objectId().required(),
-        executer: Joi.string().required(),
-        workGroup: Joi.string().required(),
         status: Joi.string().allow(""),
     });
 
@@ -39,21 +38,45 @@ function add(req, res, next) {
     }).catch(next);
 }
 
+function addsSchema(req, res, next) {
+    const schema = Joi.array().items(
+        Joi.object({
+            orderId: Joi.string().required(),
+            startTime: Joi.date().required(),
+            endTime: Joi.date().required(),
+            outageStartTime: Joi.date().allow(null),
+            outageEndTime: Joi.date().optional().allow(null),
+            title: Joi.string().required(),
+            domain: Joi.objectId().required(),
+            status: Joi.string().allow(""),
+        }
+    )
+);
+
+    validateRequest(req, next, schema);
+}
+
+function adds(req, res, next) {
+    for (let cr of req.body){
+    }
+
+    crController.addCRs(req.body).then((event) => {
+        res.json(event)
+    }).catch(next);
+}
 
 function viewSchema(req, res, next) {
     const schema = Joi.object({
         _id: Joi.objectId().optional(),
         date : Joi.date().optional(),
-        crNumber: Joi.string().optional(),
+        orderId: Joi.string().optional(),
         startTime: Joi.date().optional(),
         endTime: Joi.date().optional(),
         outageStartTime: Joi.date().optional(),
         outageEndTime: Joi.date().optional(),
         title: Joi.string().optional(),
         domain: Joi.objectId().optional(),
-        executer: Joi.string().optional(),
-        workGroup: Joi.string().optional(),
-        status: Joi.string().optional(),
+        selfDomain : Joi.boolean().optional(),
         itemsPerPage: Joi.number().optional(),
         page: Joi.number().optional(),
         sortBy: Joi.string().optional(),
@@ -89,8 +112,8 @@ function updateSchema(req, res, next) {
         crNumber: Joi.string().optional(),
         startTime: Joi.date().optional(),
         endTime: Joi.optional().optional(),
-        outageStartTime: Joi.date().optional().allow(null),
-        outageEndTime: Joi.optional().allow(null),
+        outageStartTime: Joi.date().optional(),
+        outageEndTime: Joi.optional(),
         title: Joi.string().optional(),
         domain: Joi.objectId().optional(),
         executer: Joi.string().optional(),
@@ -101,6 +124,7 @@ function updateSchema(req, res, next) {
 }
 
 function update(req, res, next) {
+    req.body.reporter = req.user.id
     crController.updateCr(req.body).then((event) => {
         res.json(event)
     }).catch(next);

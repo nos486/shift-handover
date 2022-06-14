@@ -25,6 +25,7 @@ function viewUsersSchema(req, res, next) {
     const schema = Joi.object({
         _id: Joi.objectId().optional(),
         username: Joi.string().optional(),
+        domain: Joi.objectId().optional(),
         itemsPerPage: Joi.number().optional(),
         page: Joi.number().optional(),
         sortBy: Joi.string().optional(),

@@ -1,5 +1,6 @@
 export const state = () => ({
   user: {},
+  domain : "",
   jwtToken: "",
   refreshToken: "",
 });
@@ -7,6 +8,9 @@ export const state = () => ({
 export const getters = {
   user: state => {
     return state.user
+  },
+  domain: state => {
+    return state.domain
   },
   jwtToken: state => {
     return state.jwtToken
@@ -19,6 +23,10 @@ export const getters = {
 export const mutations = {
   setUser: (state, user) => {
     state.user = user
+  },
+  setDomain: (state, domain) => {
+    console.log("domain",domain)
+    state.domain = domain
   },
   setJwtToken: (state, jwtToken) => {
     state.jwtToken = jwtToken

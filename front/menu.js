@@ -17,7 +17,7 @@ export default new Menu({
       editable: false,
       headers: [
         new Header({text: 'ID', value: 'id', isHidden: true}),
-        new Header({text: 'Date', value: 'date', type: Date, defaultAmount: null, isFilterable: true, slot: "date"}),
+        new Header({text: 'Date', value: 'date', type: Date, defaultAmount: null, slot: "date"}),
         new Header({
           text: 'Shift', value: 'isDay', type: "select",
           defaultAmount: true,
@@ -38,17 +38,23 @@ export default new Menu({
           type: "select",
           items: "user",
           itemKey: "username",
-          isHidden: true
+          slot : "operator",
+          isReadOnly : true
         }),
-        new Header({text: 'Operator', value: 'operatorName', slot: "operatorName", isReadOnly: true}),
+        new Header({
+          text: 'Handover To',
+          value: 'handoverTo',
+          type: "select",
+          items: "user",
+          slot : "handoverTo",
+          isReadOnly : true
+        }),
         new Header({
           text: 'Domain',
           value: 'domain',
-          type: "select",
-          items: "domain",
-          isHidden: true
+          slot : "domain",
+          isReadOnly : true
         }),
-        new Header({text: 'Domain', value: 'domainName', slot: "domainName", isReadOnly: true}),
       ]
     }),
     new Menu({
@@ -85,7 +91,8 @@ export default new Menu({
           ],
           isCreateOnly: true
         }),
-        new Header({text: 'Reporter', value: 'reporterName', isReadOnly: true}),
+        new Header({text: 'Reporter', value: 'reporter', isReadOnly: true,slot:"reporter"}),
+        new Header({text: 'Reporter Domain', value: 'reporterDomain', isReadOnly: true, slot:"reporterDomain"}),
         new Header({
           text: 'Status',
           value: 'status',
@@ -119,36 +126,32 @@ export default new Menu({
           slot: "outageEndTime",
           isCreateOnly: true
         }),
-        new Header({text: 'Outage', value: 'outage', slot: "outage", type: "second"}),
+        new Header({text: 'Outage', value: 'outage', slot: "outage",isReadOnly:true, type: "second"}),
 
-        new Header({text: 'Affected', value: 'affectedDomainsNames', slot: "affectedDomainsNames", isReadOnly: true}),
-        new Header({
-          text: 'AffectedDomains',
-          value: 'affectedDomains',
-          isCreateOnly: true,
-          type: "select",
-          defaultAmount: [],
-          items: "domain",
-          isMultiple: true
-        }),
-        new Header({text: 'Services', value: 'affectedServicesNames', slot: "affectedServicesNames", isReadOnly: true}),
+        // new Header({
+        //   text: 'AffectedDomains',
+        //   value: 'affectedDomains',
+        //   type: "select",
+        //   defaultAmount: [],
+        //   items: "domain",
+        //   isMultiple: true
+        // }),
         new Header({
           text: 'AffectedServices',
           value: 'affectedServices',
-          isCreateOnly: true,
           type: "select",
           defaultAmount: [],
           items: "service",
-          isMultiple: true
+          isMultiple: true,
+          slot: "affectedServices"
         }),
-        new Header({text: 'Domain', value: 'domainName', slot: "domainName", isReadOnly: true}),
         new Header({
           text: 'Domain',
           value: 'domain',
           type: "select",
           items: "domain",
-          isCreateOnly: true,
-          isUpdateOnly: true
+          slot : "domain",
+          IOKey : "id",
         }),
         new Header({text: 'Created At', value: 'createdAt', type: "DateTime", slot: "createdAt", isHidden: true})
       ]
@@ -158,9 +161,19 @@ export default new Menu({
       icon: 'mdi-archive-refresh',
       title: 'Change Requests',
       to: '/cr',
+      group : ["CBS"],
       headers: [
         new Header({text: 'ID', value: 'id', isHidden: true}),
-        new Header({text: 'CR Number', value: 'crNumber'}),
+        new Header({text: 'Order ID', value: 'orderId'}),
+        new Header({text: 'Title', value: 'title'}),
+        new Header({
+          text: 'Domain',
+          value: 'domain',
+          type: "select",
+          items: "domain",
+          slot : "domain",
+          IOKey : "id",
+        }),
         new Header({text: 'Start Time', value: 'startTime', type: "DateTime", defaultAmount: null, slot: "startTime"}),
         new Header({text: 'End Time', value: 'endTime', type: "DateTime", defaultAmount: null, slot: "endTime"}),
         new Header({
@@ -178,26 +191,18 @@ export default new Menu({
           slot: "outageEndTime",
           isCreateOnly: true
         }),
-        new Header({text: 'Outage', value: 'outage', slot: "outage", type: "second"}),
-        new Header({text: 'Title', value: 'title'}),
-        new Header({text: 'Reporter', value: 'reporterName', isReadOnly: true}),
-        new Header({text: 'Domain', value: 'domainName', slot: "domainName", isReadOnly: true}),
-        new Header({
-          text: 'Domain',
-          value: 'domain',
-          type: "select",
-          items: "domain",
-          isCreateOnly: true,
-          isUpdateOnly: true
-        }),
-        new Header({text: 'Work Group', value: 'workGroup'}),
-        new Header({text: 'Executer', value: 'executer'}),
+        new Header({text: 'Outage', value: 'outage', slot: "outage",isReadOnly:true}),
+        new Header({text: 'Reporter', value: 'reporter', isReadOnly: true,slot:"reporter"}),
         new Header({
           text: 'Status',
           value: 'status',
           type: "select",
-          defaultAmount: "complete",
+          defaultAmount: "ongoing",
           items: [
+            {
+              name: "ONGOING",
+              value: "ongoing"
+            },
             {
               name: "COMPLETE",
               value: "complete"
@@ -207,8 +212,8 @@ export default new Menu({
               value: "open"
             },
             {
-              name: "Cancel",
-              value: "CANCEL"
+              name: "CANCEL",
+              value: "cancel"
             }
           ], slot: "status"
         }),
@@ -235,10 +240,8 @@ export default new Menu({
               items: "user",
               itemKey: "username",
               searchOn: "username",
-              isCreateOnly: true,
-              isUpdateOnly: true
+              slot : "manager"
             }),
-            new Header({text: 'Manager', value: 'managerName', isReadOnly: true})
           ]
         }),
         new Menu({
@@ -254,10 +257,8 @@ export default new Menu({
               value: 'domain',
               type: "select",
               items: "domain",
-              isCreateOnly: true,
-              isUpdateOnly: true
+              slot : "domain"
             }),
-            new Header({text: 'Domain', value: 'domainName', slot: "domainName", isReadOnly: true}),
           ]
         }),
         new Menu({
@@ -311,14 +312,12 @@ export default new Menu({
                 }
               ]
             }),
-            new Header({text: 'Domain', value: 'domainName', isReadOnly: true}),
             new Header({
               text: 'Domain',
               value: 'domain',
               type: "select",
               items: "domain",
-              isCreateOnly: true,
-              isUpdateOnly: true
+              slot : "domain"
             }),
           ]
         }),
@@ -332,10 +331,17 @@ export default new Menu({
       items: [
         new Menu({
           value: 'csvAlarmParser',
-          icon: 'mdi-alert',
+          icon: 'mdi-file-chart',
           title: 'Alarm Parser',
           to: '/csvAlarmParser'
-        })]
+        }),
+        new Menu({
+          value: 'cabParser',
+          icon: 'mdi-file-excel',
+          title: 'CAB Parser',
+          to: '/cabParser'
+        })
+      ]
     })
   ]
 })

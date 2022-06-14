@@ -1,5 +1,7 @@
 const domainModel = require('./../models/Domain')
 const userModel = require('./../models/User')
+const userController = require("./user")
+const {queryPaginationHandler} = require("../helper/utils");
 
 module.exports = {
     addDomain,
@@ -13,15 +15,7 @@ module.exports = {
 
 async function addDomain({name, manager}) {
 
-    let managerName = ""
-    if(manager !== null){
-        let userQuery = await userModel.findById(manager)
-        if (manager !== undefined && !userQuery) {
-            throw "manager not find"
-        }else {
-            managerName = userQuery.username
-        }
-    }
+    await userController.getUserByIdError(manager)
 
     await domainModel.find({name: name}).then((result) => {
         if (result.length !== 0) throw "domain name exist"
@@ -29,8 +23,7 @@ async function addDomain({name, manager}) {
 
     return await domainModel.create({
         name,
-        manager,
-        managerName
+        manager
     })
 }
 
@@ -42,15 +35,13 @@ async function addDomain({name, manager}) {
 async function getDomainsPagination(query) {
     if ("name" in query) query["name"] = {'$regex' : `${query["name"]}`, '$options' : 'i'}
 
-    let page = (query.page !== undefined) ? Math.max(1, query.page) : 1
-    let itemsPerPage = (query.itemsPerPage !== undefined) ? Math.max(1, query.itemsPerPage) : 5
-    let sortBy = (query.sortBy !== undefined) ? {[query.sortBy]: (query.sortDesc === "true" ? 1 : -1)} : {"createdAt":-1}
+    let pagination = queryPaginationHandler(query)
 
     return {
-        itemsPerPage,
-        page,
+        itemsPerPage : pagination.itemsPerPage,
+        page: pagination.page,
         total : await domainModel.count(query),
-        result: await domainModel.find(query).sort(sortBy).limit(itemsPerPage).skip((page - 1)*itemsPerPage)
+        result: await domainModel.find(query).populate("manager").sort(pagination.sortBy).limit(pagination.itemsPerPage).skip((pagination.page - 1)*pagination.itemsPerPage)
     }
 }
 
@@ -78,16 +69,11 @@ async function updateDomain(query) {
     delete query._id
 
 
-    let userQuery = await userModel.findById(query.manager)
-    if (query.manager !== null && !userQuery) {
-            throw "manager not find"
-    }
+    await userController.getUserByIdError(query.manager)
 
     for (const [key, value] of Object.entries(query)) {
         domain[key] = value
     }
-
-    domain.managerName = query.manager !== null ? userQuery.username : ""
 
     await domain.save()
     return domain
