@@ -3,6 +3,7 @@ import appConfig from "../config";
 export default function ({$axios, store, route, app}) {
   // $axios.defaults.withCredentials = true;
   $axios.interceptors.request.use((config) => {
+    // config.baseURL = appConfig.apiUrl
     config.baseURL = appConfig.apiUrl
     if (store.getters["services/user/jwtToken"] !== "") {
       config.headers["Authorization"] = `Bearer ${store.getters["services/user/jwtToken"]}`
