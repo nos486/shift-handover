@@ -28,19 +28,19 @@ services:
     networks:
       - network
 
-  front:
-    image: node:17.8.0
-    restart: always
-    ports:
-      - "8000:80"
-    volumes:
-      - ./front:/app
-    working_dir: /app
-    command: bash -c "npm run build"
-    environment:
-      NODE_OPTIONS: --openssl-legacy-provider
-    networks:
-      - network
+#  front:
+#    image: node:17.8.0
+#    restart: always
+#    ports:
+#      - "8000:80"
+#    volumes:
+#      - ./front:/app
+#    working_dir: /app
+#    command: bash -c "npm run build"
+#    environment:
+#      NODE_OPTIONS: --openssl-legacy-provider
+#    networks:
+#      - network
 
   nginx:
     image: nginx:latest
