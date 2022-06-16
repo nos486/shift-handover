@@ -11,6 +11,8 @@ services:
       - ./api:/app
     environment:
       DB_ADDRESS : "45.149.78.137:27017"
+      DB_USERNAME: "username"
+      DB_PASSWORD: "password"
       SECRET: supersecret
       TZ : "Asia/Tehran"
     working_dir: /app

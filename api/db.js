@@ -11,7 +11,7 @@ const connectionOptions = {
 };
 
 function dbConnect() {
-    mongoose.connect(process.env.MONGODB_URI || `mongodb://${process.env.DB_ADDRESS}/handover`).then(async () => {
+    mongoose.connect(process.env.MONGODB_URI || `mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_ADDRESS}/handover`).then(async () => {
 
 
         console.log(await userController.hasUsername("admin"))
