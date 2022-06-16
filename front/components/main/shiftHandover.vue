@@ -111,6 +111,7 @@ export default {
           type: "select",
           items: "user",
           itemKey: "username",
+          searchOn: "username",
         }),
         new Header({
           text: 'Critical Alarm',
@@ -162,7 +163,7 @@ export default {
     },
     beforeOpenHandoverModel() {
       this.handoverForm = {
-        user: (this.shift.handoverTo !== undefined) ? this.shift.handoverTo.id : null,
+        user: (this.shift.handoverTo !== undefined) ? this.shift.handoverTo.id : "null",
         critical: this.shift.alarms.critical,
         major: this.shift.alarms.major,
         miner: this.shift.alarms.miner,

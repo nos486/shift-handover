@@ -8,7 +8,7 @@
       <!--      <v-btn icon @click.stop="miniVariant = !miniVariant">-->
       <!--        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>-->
       <!--      </v-btn>-->
-      <v-toolbar-title v-text="$nuxt.$route.name"/>
+      <v-toolbar-title v-text="titleGenerate()"/>
       <v-spacer/>
       <DomainChanger class="mr-3"></DomainChanger>
       <Profile></Profile>
@@ -39,6 +39,24 @@ export default {
       clipped: true,
       drawer: true,
       miniVariant: false,
+    }
+  },
+  methods : {
+    titleGenerate(){
+      let title = ""
+      for ( let i of this.$nuxt.$route.name.split("-").lastItem.split(/(?=[A-Z])/)){
+        if(title === ""){
+          if (i.length <= 3){
+            title += i.toUpperCase()
+          }else {
+            title += i.charAt(0).toUpperCase() + i.slice(1);
+          }
+
+        } else {
+          title += " " + i.charAt(0).toUpperCase() + i.slice(1);
+        }
+      }
+      return title
     }
   }
 }

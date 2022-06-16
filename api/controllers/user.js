@@ -2,6 +2,7 @@
 const userModel = require('./../models/User')
 const domainModel = require('./../models/Domain')
 const tokenController = require("./token")
+const domainController = require("./domain")
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const {randomString, queryPaginationHandler} = require("../helper/utils");
@@ -44,9 +45,8 @@ async function createUser({username, email,firstname,lastName,phoneNumber,domain
         throw "Email exist"
     }
 
-    await domainModel.findById(domain).then((query)=>{
-        if (query !== null) throw "domain not find"
-    })
+    console.log(domain)
+    await domainController.getDomainByIdError(domain)
 
     let user = new userModel({
         username,

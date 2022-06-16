@@ -31,7 +31,7 @@ export const mutations = {
 
 
 export const actions = {
-  update(context, {name,headerData={}}) {
+  update(context, {name,headerData={itemsPerPage:100}}) {
 
     let header = ""
     for (let [key,value] of Object.entries(headerData)){
@@ -42,7 +42,7 @@ export const actions = {
 
 
     return new Promise((resolve, reject) => {
-      this.$axios.get(`/${name}${header}?itemsPerPage=100`, {}).then((response) => {
+      this.$axios.get(`/${name}${header}`, {}).then((response) => {
         let result = response.data.result
         context.commit(name, result)
         resolve(result);
