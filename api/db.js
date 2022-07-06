@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const userController = require("./controllers/user")
-const domainController = require("./controllers/domain")
 const {ROLE} = require("./models/enums");
+const domainModel = require("./models/Domain");
 
 const connectionOptions = {
     useCreateIndex: true,
@@ -24,11 +24,10 @@ function dbConnect() {
                     role : ROLE.ADMIN
                 })
 
-            admin.domain = await domainController.addDomain(
-                {
-                    name: "Administrator",
-                    manager: admin._id
-                })
+            admin.domain = await domainModel.create({
+                name:"Administrator", admin
+            })
+
             await admin.save()
             console.log("admin created")
         }

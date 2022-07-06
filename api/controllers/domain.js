@@ -15,7 +15,7 @@ module.exports = {
 
 async function addDomain({name, manager}) {
 
-    await userController.getUserByIdError(manager)
+    await userController.getUserByIdError(manager,false)
 
     await domainModel.find({name: name}).then((result) => {
         if (result.length !== 0) throw "domain name exist"
