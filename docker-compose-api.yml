@@ -5,7 +5,6 @@ services:
     restart: always
     ports:
       - "3000:3000"
-      - "27017:27017"
     volumes:
       - ./api:/app
     environment:
@@ -15,5 +14,7 @@ services:
       SECRET: supersecret
       TZ : "Asia/Tehran"
     working_dir: /app
+    networks:
+      - bridge
     command: bash -c "npm install && npm start"
 
