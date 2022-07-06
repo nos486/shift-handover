@@ -8,8 +8,9 @@ services:
       - "443:443"
     environment:
       - NGINX_HOST=ai6.ir
-      - NGINX_PORT=80
+      - NGINX_PORT=443
     volumes:
       - ./front/dist:/usr/share/nginx/html
+      - ./data/certs:/etc/nginx/certs
   #      - /home/ubuntu/rstudio_docker/nginx.conf:/etc/nginx/nginx.conf
   #      - /home/ubuntu/ssl:/ssl/
