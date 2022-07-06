@@ -45,8 +45,7 @@ async function createUser({username, email,firstname,lastName,phoneNumber,domain
         throw "Email exist"
     }
 
-    console.log(domain)
-    await domainController.getDomainByIdError(domain)
+    await domainController.getDomainByIdError(domain,false)
 
     let user = new userModel({
         username,

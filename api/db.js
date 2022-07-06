@@ -13,7 +13,6 @@ const connectionOptions = {
 function dbConnect() {
     mongoose.connect(process.env.MONGODB_URI || `mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_ADDRESS}/handover`).then(async () => {
 
-
         console.log(await userController.hasUsername("admin"))
         // create admin user
         if (!await userController.hasUsername("admin")) {
@@ -21,6 +20,7 @@ function dbConnect() {
                 {
                     username: "admin",
                     password: "admin",
+                    domain : null,
                     role : ROLE.ADMIN
                 })
 
@@ -32,20 +32,6 @@ function dbConnect() {
             await admin.save()
             console.log("admin created")
         }
-
-        // userController.getUsers().then(async (users: IUser[]) => {
-        //     for (let user of users) {
-        //         console.log(user.username)
-        //         // @ts-ignore
-        //         let temp = user.settings.templateSettings.c2
-        //         if(temp != undefined){
-        //             temp.push("highlights")
-        //         }
-        //         // @ts-ignore
-        //         user.settings.templateSettings.c2 = temp
-        //         await user.save()
-        //     }
-        // }).catch()
 
         console.error('database connected');
 
