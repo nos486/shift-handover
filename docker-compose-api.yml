@@ -15,6 +15,9 @@ services:
       TZ : "Asia/Tehran"
     working_dir: /app
     networks:
-      - bridge
+      - global
     command: bash -c "npm install && npm start"
 
+networks:
+  global:
+    external: true
