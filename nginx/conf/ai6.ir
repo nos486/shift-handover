@@ -1,0 +1,32 @@
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name ai6.ir www.ai6.ir;
+    server_tokens off;
+
+    root /usr/share/nginx/html/ai6;
+    index index.html index.htm index.nginx-debian.html;
+
+    location / {
+        return 301 https://ai6.org$request_uri;
+    }
+}
+
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    ssl_certificate /etc/nginx/certs/ai6.crt;
+    ssl_certificate_key /etc/nginx/certs/ai6.key;
+
+    root /usr/share/nginx/html/ai6;
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name ai6.ir www.ai6.ir;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
