@@ -6,7 +6,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./*:/app
+      - ./api:/app
     environment:
       DB_ADDRESS : "156.253.5.25:27017"
       DB_USERNAME : "username"
