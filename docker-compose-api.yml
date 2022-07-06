@@ -5,10 +5,11 @@ services:
     restart: always
     ports:
       - "3000:3000"
+      - "27017:27017"
     volumes:
       - ./api:/app
     environment:
-      DB_ADDRESS : "156.253.5.25:27017"
+      DB_ADDRESS : "ai6.ir:27017"
       DB_USERNAME : "username"
       DB_PASSWORD : "password"
       SECRET: supersecret
