@@ -60,9 +60,20 @@ export default {
       menu: menu.getItem("event").clone(),
     }
   },
-  computed: {},
+  computed: {
+    userDomain : function () {
+      return this.$store.getters["services/user/user"].domain
+    }
+  },
+  watch :{
+    userDomain : {
+      handler : function (){
+        this.menu.getHeader("domain").defaultAmount = this.userDomain.id
+      },
+    }
+  },
   mounted() {
-    this.menu.getHeader("domain").defaultAmount = this.$store.getters["services/user/user"].domain
+
   },
   methods: {
     createDataChange(data) {

@@ -112,7 +112,6 @@ export default {
     },
   },
   mounted() {
-
     if (typeof this.items === 'string') {
       this.updateIdValueList(this.items)
       this.selected = this.value
