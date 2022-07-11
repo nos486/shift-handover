@@ -1,9 +1,7 @@
 <template>
   <div>
     <APITable :menu="menu">
-      <template slot="item.manager" slot-scope="{item}">
-        {{ (item.manager !== null) ? item.manager.username : "-" }}
-      </template>
+
     </APITable>
   </div>
 </template>

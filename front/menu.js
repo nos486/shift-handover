@@ -233,15 +233,6 @@ export default new Menu({
           headers: [
             new Header({text: 'ID', value: 'id', isHidden: true}),
             new Header({text: 'Name', value: 'name', isFilterable: true}),
-            new Header({
-              text: 'Manager',
-              value: 'manager',
-              type: "select",
-              items: "user",
-              itemKey: "username",
-              searchOn: "username",
-              slot : "manager"
-            }),
           ]
         }),
         new Menu({
