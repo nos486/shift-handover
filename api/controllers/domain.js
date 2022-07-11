@@ -1,5 +1,4 @@
 const domainModel = require('./../models/Domain')
-const userModel = require('./../models/User')
 const userController = require("./user")
 const {queryPaginationHandler} = require("../helper/utils");
 
@@ -13,9 +12,7 @@ module.exports = {
     getDomainByIdError
 }
 
-async function addDomain({name, manager}) {
-
-    await userController.getUserByIdError(manager,false)
+async function addDomain({name}) {
 
     await domainModel.find({name: name}).then((result) => {
         if (result.length !== 0) throw "domain name exist"
@@ -23,7 +20,6 @@ async function addDomain({name, manager}) {
 
     return await domainModel.create({
         name,
-        manager
     })
 }
 
@@ -41,7 +37,7 @@ async function getDomainsPagination(query) {
         itemsPerPage : pagination.itemsPerPage,
         page: pagination.page,
         total : await domainModel.count(query),
-        result: await domainModel.find(query).populate("manager").sort(pagination.sortBy).limit(pagination.itemsPerPage).skip((pagination.page - 1)*pagination.itemsPerPage)
+        result: await domainModel.find(query).sort(pagination.sortBy).limit(pagination.itemsPerPage).skip((pagination.page - 1)*pagination.itemsPerPage)
     }
 }
 
@@ -67,9 +63,6 @@ async function deleteDomains(ids) {
 async function updateDomain(query) {
     let domain = await domainModel.findOne({_id: query._id});
     delete query._id
-
-
-    await userController.getUserByIdError(query.manager)
 
     for (const [key, value] of Object.entries(query)) {
         domain[key] = value

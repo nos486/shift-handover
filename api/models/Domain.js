@@ -7,13 +7,6 @@ const schema = new mongoose.Schema(
             unique : true,
             required: true,
         },
-        manager: {
-            type: mongoose.Types.ObjectId,
-            ref: "User"
-        },
-        managerName: {
-            type: String,
-        },
     }, {timestamps: true},
 );
 
