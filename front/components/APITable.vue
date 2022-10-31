@@ -2,10 +2,12 @@
   <Loading class="pa-5" :loading="loading">
     <div class="d-flex flex-column">
 
-      <ModalForm v-if="!readOnly" ref="addModal" class="mb-5" title="New" icon="mdi-plus" v-model="defaultData" :items="menu.headers"
-                 @save="addNewItemToServer" @show="setDefaultData" :loading="loading">
-      </ModalForm>
-
+      <div class="d-flex justify-space-between">
+        <ModalForm v-if="!readOnly" ref="addModal" class="mb-5" title="New" icon="mdi-plus" v-model="defaultData" :items="menu.headers"
+                   @save="addNewItemToServer" @show="setDefaultData" :loading="loading">
+        </ModalForm>
+        <slot name="header"></slot>
+      </div>
       <ModalForm ref="editModal" title="Update" icon="mdi-pencil" :items="menu.headers" @save="edit"
                  :loading="loading" v-model="editData" is-editable-form no-btn>
       </ModalForm>
@@ -93,7 +95,6 @@ export default {
   },
   methods: {
     getData(headers = {}) {
-      console.log(headers)
       this.$store.dispatch("services/global/get", {
         pathName: this.menu.value,
         header: {
