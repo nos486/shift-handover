@@ -1,5 +1,6 @@
 import colors from 'vuetify/es5/util/colors'
-
+// import '@mdi/font/css/materialdesignicons.css'
+// import 'material-design-icons-iconfont/dist/material-design-icons.min.css'
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -31,8 +32,11 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
-    '~/assets/global.css'
+    '~/assets/global.css',
+    '@mdi/font/css/materialdesignicons.css',
+    'typeface-roboto/index.css'
   ],
+
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
@@ -65,6 +69,12 @@ export default {
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
+    defaultAssets : {
+      font: {
+        family: 'Roboto'
+      },
+      icons: 'mdi'
+    },
     // theme: {
     //   dark: true,
     //   themes: {
