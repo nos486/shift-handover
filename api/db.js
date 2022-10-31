@@ -25,7 +25,7 @@ function dbConnect() {
                 })
 
             admin.domain = await domainModel.create({
-                name:"Administrator", admin
+                name:"All", admin
             })
 
             await admin.save()
