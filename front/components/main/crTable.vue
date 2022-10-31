@@ -1,6 +1,6 @@
 <template>
   <div>
-    <APITable ref="api" :menu="menu" :get-data-extra-headers="(allDomains) ? query : $store.getters['services/user/domain'] !== '' ? {'domain':$store.getters['services/user/domain']} :{'selfDomain':true}" :read-only="readOnly">
+    <APITable ref="api" :menu="menu" :get-data-extra-headers="(allDomains) ? query : $store.getters['services/user/queryDomain'] !== '' ? {'domain':$store.getters['services/user/queryDomain']} :{'selfDomain':true}" :read-only="readOnly">
       <template slot="item.operatorName" slot-scope="{item}">
         <v-chip small :color="$store.getters['app/baseColor']" dark>
           {{ item.operatorName }}
@@ -61,12 +61,12 @@ export default {
     }
   },
   computed : {
-    domain : function (){
-      return this.$store.getters['services/user/domain']
+    queryDomain : function (){
+      return this.$store.getters['services/user/queryDomain']
     }
   },
   watch : {
-    domain : function (){
+    queryDomain : function (){
       this.$nextTick(()=>{
         this.$refs.api.getData({})
       })
