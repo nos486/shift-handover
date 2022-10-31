@@ -29,7 +29,7 @@ export default {
     },
     domain : {
       handler : function (domain) {
-        this.$store.commit("services/user/setDomain",domain)
+        this.$store.commit("services/user/setQueryDomain",domain)
       },
     }
   },
