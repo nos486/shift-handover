@@ -1,6 +1,6 @@
 <template>
   <div>
-    <APITable ref="api" :menu="menu" :get-data-extra-headers="(allDomains) ? {} : $store.getters['services/user/domain'] !== '' ? {'domain':$store.getters['services/user/domain']} :{'selfDomain':true}">
+    <APITable ref="api" :menu="menu" :get-data-extra-headers="(allDomains) ? {} : $store.getters['services/user/queryDomain'] !== '' ? {'domain':$store.getters['services/user/queryDomain']} :{'selfDomain':true}">
       <template slot="item.date" slot-scope="{item}">
         {{ new Date(item.date).toDateString() }}
       </template>
@@ -55,7 +55,7 @@ export default {
   },
   computed : {
     domain : function (){
-      return this.$store.getters['services/user/domain']
+      return this.$store.getters['services/user/queryDomain']
     }
   },
   watch : {

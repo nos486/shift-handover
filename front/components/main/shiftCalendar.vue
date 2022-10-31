@@ -53,7 +53,7 @@ export default {
   },
   computed : {
     domain : function (){
-      return this.$store.getters['services/user/domain']
+      return this.$store.getters['services/user/queryDomain']
     }
   },
   watch : {
