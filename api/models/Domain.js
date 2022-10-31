@@ -7,6 +7,10 @@ const schema = new mongoose.Schema(
             unique : true,
             required: true,
         },
+        eventsList:{
+            type: Array,
+
+        },
     }, {timestamps: true},
 );
 
