@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex flex-column">
-    <APITable :menu="menu" @createDataChange="createDataChange" @updateDataChange="updateDataChange">
+    <APITable ref="api" :menu="menu" @createDataChange="createDataChange" @updateDataChange="updateDataChange">
       <template slot="item.title" slot-scope="{item}">
         <div class="d-flex align-center">
           <div>
@@ -46,6 +46,10 @@
         </v-chip>
       </template>
 
+      <template slot="header">
+        <DomainSelector v-if="$store.getters['services/user/user'].role === 'admin'" v-model="queryDomain"></DomainSelector>
+      </template>
+
     </APITable>
   </div>
 </template>
@@ -58,23 +62,32 @@ export default {
   data: () => {
     return {
       menu: menu.getItem("event").clone(),
+      queryDomain : null
     }
   },
   computed: {
     userDomain : function () {
       return this.$store.getters["services/user/user"].domain
-    }
+    },
   },
   watch :{
     userDomain : {
       handler : function (){
         this.menu.getHeader("domain").defaultAmount = this.userDomain.id
       },
+    },
+    queryDomain : function (){
+      console.log(this.queryDomain)
+      this.$nextTick(()=>{
+        this.$refs.api.getData({"domain":this.queryDomain})
+      })
     }
   },
   mounted() {
 
   },
+
+
   methods: {
     createDataChange(data) {
       if (data.status === "open") {

@@ -38,22 +38,22 @@ export default new Menu({
           type: "select",
           items: "user",
           itemKey: "username",
-          slot : "operator",
-          isReadOnly : true
+          slot: "operator",
+          isReadOnly: true
         }),
         new Header({
           text: 'Handover To',
           value: 'handoverTo',
           type: "select",
           items: "user",
-          slot : "handoverTo",
-          isReadOnly : true
+          slot: "handoverTo",
+          isReadOnly: true
         }),
         new Header({
           text: 'Domain',
           value: 'domain',
-          slot : "domain",
-          isReadOnly : true
+          slot: "domain",
+          isReadOnly: true
         }),
       ]
     }),
@@ -91,8 +91,8 @@ export default new Menu({
           ],
           isCreateOnly: true
         }),
-        new Header({text: 'Reporter', value: 'reporter', isReadOnly: true,slot:"reporter"}),
-        new Header({text: 'Reporter Domain', value: 'reporterDomain', isReadOnly: true, slot:"reporterDomain"}),
+        new Header({text: 'Reporter', value: 'reporter', isReadOnly: true, slot: "reporter"}),
+        new Header({text: 'Reporter Domain', value: 'reporterDomain', isReadOnly: true, slot: "reporterDomain"}),
         new Header({
           text: 'Status',
           value: 'status',
@@ -126,7 +126,7 @@ export default new Menu({
           slot: "outageEndTime",
           isCreateOnly: true
         }),
-        new Header({text: 'Outage', value: 'outage', slot: "outage",isReadOnly:true, type: "second"}),
+        new Header({text: 'Outage', value: 'outage', slot: "outage", isReadOnly: true, type: "second"}),
 
         // new Header({
         //   text: 'AffectedDomains',
@@ -148,10 +148,8 @@ export default new Menu({
         new Header({
           text: 'Domain',
           value: 'domain',
-          type: "select",
-          items: "domain",
-          slot : "domain",
-          IOKey : "id",
+          slot: "domain",
+          isReadOnly: true,
         }),
         new Header({text: 'Created At', value: 'createdAt', type: "DateTime", slot: "createdAt", isHidden: true})
       ]
@@ -161,7 +159,7 @@ export default new Menu({
       icon: 'mdi-archive-refresh',
       title: 'Change Requests',
       to: '/cr',
-      group : ["CBS"],
+      group: ["CBS"],
       headers: [
         new Header({text: 'ID', value: 'id', isHidden: true}),
         new Header({text: 'Order ID', value: 'orderId'}),
@@ -171,8 +169,8 @@ export default new Menu({
           value: 'domain',
           type: "select",
           items: "domain",
-          slot : "domain",
-          IOKey : "id",
+          slot: "domain",
+          IOKey: "id",
         }),
         new Header({text: 'Start Time', value: 'startTime', type: "DateTime", defaultAmount: null, slot: "startTime"}),
         new Header({text: 'End Time', value: 'endTime', type: "DateTime", defaultAmount: null, slot: "endTime"}),
@@ -191,8 +189,8 @@ export default new Menu({
           slot: "outageEndTime",
           isCreateOnly: true
         }),
-        new Header({text: 'Outage', value: 'outage', slot: "outage",isReadOnly:true}),
-        new Header({text: 'Reporter', value: 'reporter', isReadOnly: true,slot:"reporter"}),
+        new Header({text: 'Outage', value: 'outage', slot: "outage", isReadOnly: true}),
+        new Header({text: 'Reporter', value: 'reporter', isReadOnly: true, slot: "reporter"}),
         new Header({
           text: 'Status',
           value: 'status',
@@ -233,6 +231,15 @@ export default new Menu({
           headers: [
             new Header({text: 'ID', value: 'id', isHidden: true}),
             new Header({text: 'Name', value: 'name', isFilterable: true}),
+            new Header({
+              text: 'Events List',
+              value: 'eventsList',
+              type: "select",
+              items: "event/list",
+              defaultAmount: [],
+              isMultiple: true,
+              slot : "eventsList"
+            }),
           ]
         }),
         new Menu({
@@ -248,7 +255,7 @@ export default new Menu({
               value: 'domain',
               type: "select",
               items: "domain",
-              slot : "domain"
+              slot: "domain"
             }),
           ]
         }),
@@ -308,7 +315,7 @@ export default new Menu({
               value: 'domain',
               type: "select",
               items: "domain",
-              slot : "domain"
+              slot: "domain"
             }),
           ]
         }),

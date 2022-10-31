@@ -27,10 +27,10 @@ services:
       - ./data/db:/data/db
     ports:
       - "27017:27017"
-    environment:
-      MONGO_INITDB_DATABASE : "handover"
-      MONGO_INITDB_ROOT_USERNAME : "username"
-      MONGO_INITDB_ROOT_PASSWORD : "password"
+#    environment:
+#      MONGO_INITDB_DATABASE : "handover"
+#      MONGO_INITDB_ROOT_USERNAME : "username"
+#      MONGO_INITDB_ROOT_PASSWORD : "password"
     networks:
       - network
 
@@ -49,7 +49,7 @@ services:
 #      - network
 
   nginx:
-    image: nginx:latest
+    image: nginx:1.23
     restart: unless-stopped
     ports:
       - 8080:80

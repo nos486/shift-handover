@@ -1,16 +1,30 @@
 version: "3.9"
 services:
+  mongo:
+    image: mongo:4.4.6
+    restart: always
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE : "handover"
+      MONGO_INITDB_ROOT_USERNAME : "username"
+      MONGO_INITDB_ROOT_PASSWORD : "password"
+    networks:
+      - network
+
   api:
     image: node:17.8.0
     restart: always
-#    depends_on:
-#      - "mongo"
+    depends_on:
+      - "mongo"
     ports:
       - "3000:3000"
     volumes:
       - ./api:/app
     environment:
-      DB_ADDRESS : "45.149.78.137:27017"
+      DB_ADDRESS : "mongo:27017"
       DB_USERNAME: "username"
       DB_PASSWORD: "password"
       SECRET: supersecret
@@ -32,7 +46,7 @@ services:
 
   vue:
     image: node:17.8.0
-#    restart: always
+    restart: always
     depends_on:
       - "api"
     ports:
