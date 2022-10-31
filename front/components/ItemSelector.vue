@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex">
-    <v-select :items="typeof this.items === 'string' ? $store.getters['items/'+items] : this.items" v-model="selected"
+    <v-select :items="typeof this.items === 'string' ? [...additionalItem,...$store.getters['items/'+items]] : this.items" v-model="selected"
               :item-value="typeof this.items === 'string' ? 'id' : 'value'"
               :item-text="itemKey!==undefined? itemKey : 'name'"
               :color="$store.getters['app/baseColor']" :item-color="$store.getters['app/baseColor']"
@@ -83,12 +83,11 @@ export default {
         return {}
       }
     },
-    staticItem: {
+    additionalItem: {
       default: () => {
-        return {}
+        return []
       }
     }
-
   },
   data: () => {
     return {
@@ -118,7 +117,6 @@ export default {
     } else {
       this.selected = this.value
     }
-
   },
   methods: {
     reset() {
@@ -177,7 +175,6 @@ export default {
           [this.searchOn]: this.searchText
         }
       }
-
 
       this.$store.dispatch("items/update", payload).then((res) => {
         this.loading = false
