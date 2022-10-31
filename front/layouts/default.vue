@@ -10,7 +10,7 @@
       <!--      </v-btn>-->
       <v-toolbar-title v-text="titleGenerate()"/>
       <v-spacer/>
-      <DomainChanger class="mr-3"></DomainChanger>
+<!--      <DomainChanger class="mr-3"></DomainChanger>-->
       <Profile></Profile>
     </v-app-bar>
     <Alert></Alert>
