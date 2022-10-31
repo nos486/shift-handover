@@ -12,6 +12,7 @@ const {ROLE, STATUS} = require("../../models/enums");
 const router = express.Router();
 router.post("/",authorize(),addEventSchema, addEvent)
 router.get("/", authorize(),viewEventSchema, getEvents)
+router.get("/list", authorize(),getAllEventList)
 router.delete("/",authorize(ROLE.ADMIN),deleteEventSchema, deleteEvents)
 router.put("/", authorize(),updateEventSchema, updateEvent)
 
@@ -28,7 +29,6 @@ function addEventSchema(req, res, next) {
         outageEndTime: Joi.date().when('status', { is: "close", then: Joi.required(), otherwise: Joi.optional().allow(null) }),
         affectedDomains: Joi.array().items(Joi.objectId().allow(null)),
         affectedServices: Joi.array().items(Joi.objectId().allow(null)),
-        domain: Joi.objectId(),
     });
 
     validateRequest(req, next, schema);
@@ -37,6 +37,7 @@ function addEventSchema(req, res, next) {
 function addEvent(req, res, next) {
     req.body.reporter = req.user.id
     if (req.body.status === "") req.body.status = STATUS.CLOSE
+    req.body.domain = req.user.domain.id
     eventController.addEvent(req.body).then((event) => {
         res.json(event)
     }).catch(next);
@@ -80,9 +81,18 @@ function viewEventSchema(req, res, next) {
 }
 
 function getEvents(req, res, next) {
+    if (req.user.role !== "admin") req.query.domain = req.user.domain.id
+    // domain is All
+    if (req.query.domain === '62c5e945a9507ef16c996e1e'){
+        delete req.query.domain
+    }
     eventController.getEventsPagination(req.query).then((event) => {
         res.json(event)
     }).catch(next);
+}
+
+function getAllEventList(req, res, next) {
+    res.json(eventController.getAllEventList())
 }
 
 function deleteEventSchema(req, res, next) {

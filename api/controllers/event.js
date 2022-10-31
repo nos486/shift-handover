@@ -8,6 +8,7 @@ module.exports = {
     addEvent,
     getEvents,
     getEventsPagination,
+    getAllEventList,
     deleteEvents,
     updateEvent
 }
@@ -18,25 +19,18 @@ async function addEvent({
                             status,
                             severity,
                             reporter,
+                            domain,
                             startTime,
                             endTime,
                             outageStartTime,
                             outageEndTime,
                             affectedDomains,
                             affectedServices,
-                            domain
                         }) {
 
     let reporterQuery = await userController.findUserById(reporter)
     if (reporterQuery === null) {
         throw "reporter not find"
-    }
-
-    let domainQuery = await domainController.getDomains({_id: domain})
-    if(domain !== null){
-        if (domainQuery.length === 0) {
-            throw "domain not find"
-        }
     }
 
 
@@ -46,6 +40,7 @@ async function addEvent({
         status,
         severity,
         reporter,
+        domain,
         startTime,
         endTime,
         outageStartTime,
@@ -53,7 +48,6 @@ async function addEvent({
         outage: (outageEndTime !== null && outageStartTime!== null) ? ((new Date(outageEndTime) - new Date(outageStartTime)) / 1000).toFixed(0) : 0,
         affectedDomains,
         affectedServices,
-        domain,
     })
 
 }
@@ -145,5 +139,11 @@ async function updateEvent(query) {
 
     await event.save()
     return event
+}
+
+function getAllEventList(){
+    return {
+        result : ["title","rca","status","severity","reporter","startTime","endTime","outageStartTime","outageEndTime","affectedDomains","affectedServices","domain"]
+    }
 }
 

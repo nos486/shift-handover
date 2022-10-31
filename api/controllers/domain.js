@@ -12,14 +12,14 @@ module.exports = {
     getDomainByIdError
 }
 
-async function addDomain({name}) {
+async function addDomain({name, eventsList = []}) {
 
     await domainModel.find({name: name}).then((result) => {
         if (result.length !== 0) throw "domain name exist"
     })
 
     return await domainModel.create({
-        name,
+        name, eventsList
     })
 }
 
@@ -29,15 +29,16 @@ async function addDomain({name}) {
  * @returns  {Promise<[Object]>}
  */
 async function getDomainsPagination(query) {
-    if ("name" in query) query["name"] = {'$regex' : `${query["name"]}`, '$options' : 'i'}
+    if ("name" in query) query["name"] = {'$regex': `${query["name"]}`, '$options': 'i'}
+    // query["name"] =  { $ne: "All" }
 
     let pagination = queryPaginationHandler(query)
 
     return {
-        itemsPerPage : pagination.itemsPerPage,
+        itemsPerPage: pagination.itemsPerPage,
         page: pagination.page,
-        total : await domainModel.count(query),
-        result: await domainModel.find(query).sort(pagination.sortBy).limit(pagination.itemsPerPage).skip((pagination.page - 1)*pagination.itemsPerPage)
+        total: await domainModel.count(query),
+        result: await domainModel.find(query).sort(pagination.sortBy).limit(pagination.itemsPerPage).skip((pagination.page - 1) * pagination.itemsPerPage)
     }
 }
 
@@ -47,15 +48,15 @@ async function getDomainsPagination(query) {
  * @returns  {Promise<[Object]>}
  */
 async function getDomains(query) {
-    if ("name" in query) query["name"] = {'$regex' : `${query["name"]}`, '$options' : 'i'}
+    if ("name" in query) query["name"] = {'$regex': `${query["name"]}`, '$options': 'i'}
     return domainModel.find(query);
 }
 
 
 async function deleteDomains(ids) {
     let result = []
-    for(let id of ids){
-        result.push(await domainModel.deleteOne({_id:id}))
+    for (let id of ids) {
+        result.push(await domainModel.deleteOne({_id: id}))
     }
     return result
 }
@@ -77,12 +78,12 @@ async function getDomainById(userId) {
     return domainModel.findOne({_id: userId});
 }
 
-async function getDomainByIdError(id,nullCheck=true) {
+async function getDomainByIdError(id, nullCheck = true) {
     if (nullCheck && id == null) throw "domain is null"
 
-    if(id == null){
+    if (id == null) {
         return null
-    }else {
+    } else {
         let query = await domainModel.findOne({_id: id})
         if (query === null) {
             throw "domain not find"

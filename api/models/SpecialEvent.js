@@ -25,9 +25,9 @@ const schema = new mongoose.Schema(
             ref: "User",
             require: true
         },
-        reporterName: {
-            type: String,
-            require: true
+        domain: {
+            type: mongoose.Types.ObjectId,
+            ref: 'Domain'
         },
         startTime: {
             type: Date,
@@ -50,23 +50,10 @@ const schema = new mongoose.Schema(
             type: mongoose.Types.ObjectId,
             ref: 'Domain'
         }],
-        affectedDomainsNames: [{
-            type: String,
-        }],
         affectedServices:[{
             type: mongoose.Types.ObjectId,
             ref: 'Service'
         }],
-        affectedServicesNames: [{
-            type: String,
-        }],
-        domain: {
-            type: mongoose.Types.ObjectId,
-            ref: 'Domain'
-        },
-        domainName: {
-            type: String,
-        },
 
     },
     {timestamps: true},

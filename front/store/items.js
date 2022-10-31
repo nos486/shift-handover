@@ -1,7 +1,8 @@
 export const state = () => ({
   domain: [],
   service: [],
-  user:[]
+  user:[],
+  "event/list" : []
 })
 
 export const getters = {
@@ -14,6 +15,9 @@ export const getters = {
   user: state => {
     return state.user
   },
+  "event/list": state => {
+    return state["event/list"]
+  },
 }
 
 export const mutations = {
@@ -25,6 +29,9 @@ export const mutations = {
   }),
   user: ((state, value) => {
     state.user = value
+  }),
+  "event/list": ((state, value) => {
+    state["event/list"] = value
   }),
 
 }

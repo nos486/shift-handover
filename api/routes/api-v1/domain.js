@@ -20,6 +20,7 @@ router.put("/", authorize([ROLE.ADMIN]),updateDomainSchema, updateDomain)
 function addDomainSchema(req, res, next) {
     const schema = Joi.object({
         name: Joi.string().required(),
+        eventsList : Joi.array().optional()
     });
 
     validateRequest(req, next, schema);
@@ -73,6 +74,7 @@ function updateDomainSchema(req, res, next) {
     const schema = Joi.object({
         _id: Joi.objectId().required(),
         name: Joi.string().optional(),
+        eventsList : Joi.array()
     });
     validateRequest(req, next, schema);
 }
