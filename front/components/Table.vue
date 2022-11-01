@@ -127,6 +127,13 @@ export default {
       },
       deep: true,
     },
+    headers: {
+      handler() {
+        this.processedHeader = []
+        this.processHeader()
+      },
+      deep: true,
+    },
   },
   mounted() {
     this.processHeader()
