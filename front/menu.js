@@ -111,6 +111,7 @@ export default new Menu({
         }),
         new Header({text: 'Start Time', value: 'startTime', type: "DateTime", defaultAmount: null, slot: "startTime"}),
         new Header({text: 'End Time', value: 'endTime', type: "DateTime", defaultAmount: null, slot: "endTime"}),
+        new Header({text: 'Duration', value: 'duration', slot: "duration", isReadOnly: true}),
         new Header({
           text: 'Outage Start',
           value: 'outageStartTime',
@@ -126,7 +127,7 @@ export default new Menu({
           slot: "outageEndTime",
           isCreateOnly: true
         }),
-        new Header({text: 'Outage', value: 'outage', slot: "outage", isReadOnly: true, type: "second"}),
+        new Header({text: 'Outage', value: 'outage', slot: "outage", isReadOnly: true}),
 
         // new Header({
         //   text: 'AffectedDomains',
