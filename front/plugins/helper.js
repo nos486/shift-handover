@@ -18,7 +18,7 @@ export default (context, inject) => {
 
   const secondToString = (value)=>{
     if(value < 60){
-      return `${value}s`
+      return `${(value/1).toFixed(2)}s`
     }else {
       if(value < 60*60){
         return `${(value/60).toFixed(0)}m`
