@@ -20,13 +20,13 @@ router.put("/", authorize(),updateEventSchema, updateEvent)
 function addEventSchema(req, res, next) {
     const schema = Joi.object({
         title: Joi.string().required(),
-        rca: Joi.string().required(),
+        rca: Joi.string(),
         status: Joi.string().allow(""),
         severity: Joi.string(),
         startTime: Joi.date().required(),
         endTime: Joi.date().when('status', { is: "close", then: Joi.required(), otherwise: Joi.optional().allow(null) }),
         outageStartTime: Joi.date().allow(null),
-        outageEndTime: Joi.date().when('status', { is: "close", then: Joi.required(), otherwise: Joi.optional().allow(null) }),
+        outageEndTime: Joi.date().allow(null),
         affectedDomains: Joi.array().items(Joi.objectId().allow(null)),
         affectedServices: Joi.array().items(Joi.objectId().allow(null)),
     });
@@ -122,7 +122,6 @@ function updateEventSchema(req, res, next) {
         outageEndTime: Joi.date().when('outageStartTime', { is: Joi.date(), then: Joi.required(), otherwise: Joi.optional().allow(null) }),
         affectedDomains: Joi.array().items(Joi.objectId().optional()).optional(),
         affectedServices: Joi.array().items(Joi.objectId().optional()).optional(),
-        domain: Joi.objectId().optional(),
     });
     validateRequest(req, next, schema);
 }
