@@ -30,6 +30,14 @@
         </v-chip>
       </template>
 
+      <template slot="item.duration" v-if="item.endTime !== null" slot-scope="{item}">
+        {{$secondToString((new Date(item.endTime) - new Date(item.startTime))/1000)}}
+      </template>
+
+      <template slot="item.outage" v-if="item.outageEndTime !== null" slot-scope="{item}">
+        {{$secondToString((new Date(item.outageEndTime) - new Date(item.outageStartTime))/1000)}}
+      </template>
+
       <template slot="item.status" slot-scope="{item}">
         <v-icon :color="item.status === 'close' ? 'green' : 'red'" :title="item.status">
           {{ item.status === 'close' ? 'mdi-check-circle' : 'mdi-alert-circle' }}
@@ -61,7 +69,7 @@ export default {
   name: 'SpecialEvents',
   data: () => {
     return {
-      menu: menu.getItem("event").clone(),
+      menu: null,
       queryDomain : null
     }
   },
@@ -73,37 +81,37 @@ export default {
   watch :{
     userDomain : {
       handler : function (){
+        this.menu = menu.getItem("event").clone().headerSelect(this.userDomain.eventsList)
         this.menu.getHeader("domain").defaultAmount = this.userDomain.id
       },
     },
     queryDomain : function (){
-      console.log(this.queryDomain)
       this.$nextTick(()=>{
         this.$refs.api.getData({"domain":this.queryDomain})
+        this.$store.dispatch("items/update",{name: "domain"}).then(()=>{
+          for (let domain of this.$store.getters["items/domain"]){
+            if (domain.id === this.queryDomain){
+              this.menu = menu.getItem("event").clone().headerSelect(domain.eventsList)
+            }
+          }
+        })
       })
     }
   },
   mounted() {
-
+    if(this.userDomain !== undefined){
+      this.menu = menu.getItem("event").clone().headerSelect(this.userDomain.eventsList)
+    }
   },
-
-
   methods: {
     createDataChange(data) {
-      if (data.status === "open") {
-        this.menu.getHeader("endTime").isHidden = true
-        this.menu.getHeader("outageStartTime").isHidden = true
-        this.menu.getHeader("outageEndTime").isHidden = true
-        data.endTime = null
-        data.outageStartTime = null
-        data.outageEndTime = null
-      } else {
-        this.menu.getHeader("endTime").isHidden = false
-        this.menu.getHeader("outageStartTime").isHidden = false
-        this.menu.getHeader("outageEndTime").isHidden = false
-      }
+      this.setHeaders(data)
     },
     updateDataChange(data) {
+      this.setHeaders(data)
+    },
+
+    setHeaders(data){
       if (data.status === "open") {
         this.menu.getHeader("endTime").isHidden = true
         this.menu.getHeader("outageStartTime").isHidden = true
@@ -112,9 +120,12 @@ export default {
         data.outageStartTime = null
         data.outageEndTime = null
       } else {
-        this.menu.getHeader("endTime").isHidden = false
-        this.menu.getHeader("outageStartTime").isHidden = false
-        this.menu.getHeader("outageEndTime").isHidden = false
+        if (!this.menu.getHeader("startTime").isHidden){
+          this.menu.getHeader("endTime").isHidden = false
+          this.menu.getHeader("outageStartTime").isHidden = false
+          this.menu.getHeader("outageEndTime").isHidden = false
+        }
+
       }
     }
   }
