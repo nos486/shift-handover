@@ -157,6 +157,22 @@ export class Menu {
 
   /**
    *
+   * @param selectList[]
+   * @returns {Menu}
+   */
+  headerSelect(selectList){
+    for (let header of this._headers){
+      if (!(header.isHidden || header.isReadOnly)){
+        if (selectList.indexOf(header.value) === -1){
+          header.isHidden = true
+        }
+      }
+    }
+    return this
+  }
+
+  /**
+   *
    * @param {Menu} item
    */
   addItem(item) {
