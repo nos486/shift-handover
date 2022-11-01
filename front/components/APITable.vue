@@ -1,6 +1,6 @@
 <template>
   <Loading class="pa-5" :loading="loading">
-    <div class="d-flex flex-column">
+    <div v-if="menu !== null" class="d-flex flex-column">
 
       <div class="d-flex justify-space-between">
         <ModalForm v-if="!readOnly" ref="addModal" class="mb-5" title="New" icon="mdi-plus" v-model="defaultData" :items="menu.headers"
@@ -95,6 +95,7 @@ export default {
   },
   methods: {
     getData(headers = {}) {
+      this.loading = true
       this.$store.dispatch("services/global/get", {
         pathName: this.menu.value,
         header: {
