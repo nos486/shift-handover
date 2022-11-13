@@ -17,6 +17,8 @@ router.use("/token", token)
 router.use("/profile", profile)
 
 router.get('/', authorize(), viewUsersSchema, getUsers);
+router.get("/genderList", authorize(),getGenderList)
+router.get("/roleList", authorize(),getRoleList)
 router.post("/", authorize(ROLE.ADMIN),addUserSchema, addUser)
 router.delete("/", authorize(ROLE.ADMIN),deleteUserSchema, deleteUsers)
 router.put("/", authorize(ROLE.ADMIN),updateUserSchema, updateUser)
@@ -38,6 +40,14 @@ function getUsers(req, res, next) {
     userController.getUsersPagination(req.query).then((domains) => {
         res.json(domains)
     }).catch(next)
+}
+
+function getGenderList(req, res, next) {
+    res.json(userController.getGenderList())
+}
+
+function getRoleList(req, res, next) {
+    res.json(userController.getRoleList())
 }
 
 function addUserSchema(req, res, next) {

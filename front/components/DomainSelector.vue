@@ -1,5 +1,5 @@
 <template>
-  <ItemSelector v-if="$store.getters['services/user/user'].username !== undefined" v-model="domain" title="Domain" items="domain" :refresh-btn="false" small ></ItemSelector>
+  <ItemSelector v-if="$store.getters['services/user/user'].username !== undefined" v-model="domain" title="Domain" items-name="domain" :refresh-btn="false" small ></ItemSelector>
 </template>
 
 <script>

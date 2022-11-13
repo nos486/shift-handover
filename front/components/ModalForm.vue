@@ -23,8 +23,8 @@
           </DateSelector>
 
           <ItemSelector v-if="item.type === 'select'" v-model="form[item.value]"
-                        :items="item.items" :title="item.text" :multiple="item.isMultiple" :disabled="item.isReadOnly"
-                        :is-modal-show="isModalShow" :itemKey="item.itemKey" :search-on="item.searchOn" :default-query="item.defaultQuery">
+                        :items-name="item.items" :title="item.text" :multiple="item.isMultiple" :disabled="item.isReadOnly"
+                        :is-modal-show="isModalShow" :item="item.itemKey" :search-on="item.searchOn" :default-query="item.defaultQuery">
           </ItemSelector>
 
           <ValidationProvider v-if="item.type === 'textarea'" :rules="item.rules" v-slot="{ errors }"

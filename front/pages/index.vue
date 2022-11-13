@@ -7,7 +7,7 @@
 <script>
 export default {
   mounted() {
-    // this.$router.push("/main")
+    this.$router.push("/events")
   }
 }
 </script>

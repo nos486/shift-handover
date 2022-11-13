@@ -51,6 +51,7 @@ export default {
   },
   methods : {
     login(){
+      this.loading = true
       this.$store.dispatch("services/user/login",{
         "username" : this.username,
         "password" : this.password
@@ -58,7 +59,8 @@ export default {
         this.$store.commit("services/user/setJwtToken",res.jwtToken)
         this.$store.commit("services/user/setRefreshToken",res.refreshToken)
         this.$store.commit("services/user/setUser",res)
-        this.$router.push("/main")
+        this.loading = false
+        this.$router.push(this.$store.getters["app/loginPath"])
       })
 
     }

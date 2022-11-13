@@ -1,5 +1,5 @@
 export const state = () => ({
-  loginPath: "/main",
+  loginPath: "/events",
   baseColor: "blue",
   title : "Handover"
 })

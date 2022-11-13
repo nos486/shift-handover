@@ -1,4 +1,19 @@
 export class Header {
+  get itemKey() {
+    return this._itemKey;
+  }
+
+  set itemKey(value) {
+    this._itemKey = value;
+  }
+  get itemValue() {
+    return this._itemValue;
+  }
+
+  set itemValue(value) {
+    this._itemValue = value;
+  }
+
   get defaultQuery() {
     return this._defaultQuery;
   }
@@ -89,9 +104,8 @@ export class Header {
                 type = undefined,
                 items = undefined,
                 itemHeader = undefined,
-                itemKey = undefined,
-                IOKey = undefined,
-                IOName = "name",
+                itemKey = "id",
+                itemValue = "name",
                 slot = undefined,
                 defaultAmount = undefined,
                 isFilterable = false,
@@ -116,9 +130,8 @@ export class Header {
     this._type = type
     this._items = items
     this._itemHeader = itemHeader;
+    this._itemValue = itemValue
     this._itemKey = itemKey
-    this._IOKey = IOKey
-    this._IOName = IOName
     this._slot = slot
     this._defaultAmount = defaultAmount
     this._isFilterable = isFilterable
@@ -198,29 +211,6 @@ export class Header {
     this._items = value;
   }
 
-  get itemKey() {
-    return this._itemKey;
-  }
-
-  set itemKey(value) {
-    this._itemKey = value;
-  }
-
-  get IOKey() {
-    return this._IOKey;
-  }
-
-  set IOKey(value) {
-    this._IOKey = value;
-  }
-
-  get IOName() {
-    return this._IOName;
-  }
-
-  set IOName(value) {
-    this._IOName = value;
-  }
 
   get slot() {
     return this._slot;
@@ -272,8 +262,8 @@ export class Header {
       isCreateOnly: this._isCreateOnly,
       isFilterable: this._isFilterable,
       isMultiple: this._isMultiple,
-      IOKey: this._IOKey,
-      IOName: this._IOName,
+      itemKey: this._itemKey,
+      itemValue: this._itemValue,
       type: this._type,
       items: this._items,
       rules: this._rules,

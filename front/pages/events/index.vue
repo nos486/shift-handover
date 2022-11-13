@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex flex-column">
-    <APITable ref="api" :menu="menu" @createDataChange="createDataChange" @updateDataChange="updateDataChange">
+    <APITable ref="api" :menu="menu" @createDataChange="createDataChange" @updateDataChange="updateDataChange" :auto-update="15">
       <template slot="item.title" slot-scope="{item}">
         <div class="d-flex align-center">
           <div>
@@ -83,6 +83,7 @@ export default {
       handler : function (){
         this.menu = menu.getItem("event").clone().headerSelect(this.userDomain.eventsList)
         this.menu.getHeader("domain").defaultAmount = this.userDomain.id
+        // this.menu.getHeader("affectedServices").defaultQuery = (this.userDomain.name !== "All") ? {"domain":this.userDomain.id} : {}
       },
     },
     queryDomain : function (){

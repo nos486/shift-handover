@@ -65,6 +65,10 @@ export default {
     },
     readOnly : {
       default : false
+    },
+    autoUpdate : {
+      type : Number,
+      default : 0
     }
   },
   data: () => {
@@ -91,7 +95,12 @@ export default {
     }
   },
   mounted() {
-    // this.getData()
+    if(this.autoUpdate > 0){
+      this.interval = setInterval(this.update,this.autoUpdate*1000)
+    }
+  },
+  beforeDestroy() {
+    clearInterval(this.interval)
   },
   methods: {
     getData(headers = {}) {
@@ -160,11 +169,20 @@ export default {
     showEditModal: async function (item) {
       let editData = {}
       for (let header of this.menu.headers) {
+        console.log(header)
         if (header.defaultAmount !== undefined) editData[header.value] = header.defaultAmount
         if ((!header.isReadOnly)) editData[header.value] = item[header.value]
-        if( header.IOKey !== undefined) editData[header.value] = item[header.value][header.IOKey]
+        // if( header.IOKey !== undefined) editData[header.value] = item[header.value][header.IOKey]
         // if( header.IOKey !== undefined) console.log("here",item[header.value][header.IOKey])
         if (header.value === "id") editData._id = item["id"]
+        // if (header.isMultiple) {
+        //   let list = []
+        //   for(let selectedItem of item[header.value]){
+        //     console.log(selectedItem)
+        //     list.push(selectedItem.id)
+        //   }
+        //   editData[header.value] = list
+        // }
       }
       this.editData = JSON.parse(JSON.stringify(editData))
       this.$refs.editModal.open()

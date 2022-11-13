@@ -8,7 +8,9 @@ module.exports = {
     addEvent,
     getEvents,
     getEventsPagination,
-    getAllEventList,
+    getEventList,
+    getStatusList,
+    getSeverityList,
     deleteEvents,
     updateEvent
 }
@@ -74,15 +76,22 @@ async function getEvents(query) {
     return eventModel.find(query)
 }
 
-async function deleteEvents(ids) {
+async function deleteEvents(user,ids) {
+
     let result = []
     for (let id of ids) {
-        result.push(await eventModel.deleteOne({_id: id}))
+        let event = await eventModel.findOne({_id: id});
+        if (event.reporter.toString() === user._id.toString() || user.role === 'admin') {
+            result.push(await eventModel.deleteOne({_id: id}))
+        }else {
+            throw "you are not allow to delete."
+        }
+
     }
     return result
 }
 
-async function updateEvent(query) {
+async function updateEvent(user,query) {
 
     // let reporterQuery = await userController.findUserById(query.reporter)
     // if (reporterQuery === null) {
@@ -122,30 +131,63 @@ async function updateEvent(query) {
     }
 
     let event = await eventModel.findOne({_id: query._id});
+
+    if (event.reporter.toString() !== user._id.toString()) {
+        if (user.role !== 'admin') throw "you are not allow to edit."
+    }
+
     delete query._id
 
     for (const [key, value] of Object.entries(query)) {
         event[key] = value
     }
-    // event.reporterName =  reporterQuery.username
+
     if (query.outageEndTime !== null && query.outageStartTime !== null) {
         event.outage = ((new Date(query.outageEndTime) - new Date(query.outageStartTime)) / 1000).toFixed(0)
     } else {
         event.outage = 0
     }
-    // event.affectedDomainsNames = affectedDomainsNames
     event.affectedServicesNames = affectedServicesNames
-    // event.domainName = (query.domain !== null) ? domainQuery[0].name : ""
 
     await event.save()
     return event
 }
 
-function getAllEventList() {
+function getEventList() {
     return {
-        result: ["title", "rca", "status", "severity",
-            "reporter", "startTime", "endTime", "outageStartTime",
-            "outageEndTime", "affectedDomains", "affectedServices", "domain"]
+        result: [
+            {name : "title",id: "title"},
+            {name : "rca",id: "rca"},
+            {name : "status",id: "status"},
+            {name : "severity",id: "severity"},
+            {name : "startTime",id: "startTime"},
+            {name : "endTime",id: "endTime"},
+            {name : "outageStartTime",id: "outageStartTime"},
+            {name : "reporter",id: "reporter"},
+            {name : "outageEndTime",id: "outageEndTime"},
+            {name : "affectedDomains",id: "affectedDomains"},
+            {name : "affectedServices",id: "affectedServices"},
+            {name : "domain",id: "domain"},
+            ]
     }
 }
 
+function getStatusList() {
+    return {
+        result: [
+            {name : "Close",id: "close"},
+            {name : "Open",id: "open"},
+        ]
+    }
+}
+
+function getSeverityList() {
+    return {
+        result: [
+            {name : "Critical",id: "critical"},
+            {name : "Major",id: "major"},
+            {name : "Miner",id: "miner"},
+            {name : "None",id: "none"},
+        ]
+    }
+}

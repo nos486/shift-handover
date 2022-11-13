@@ -2,7 +2,12 @@ export const state = () => ({
   domain: [],
   service: [],
   user:[],
-  "event/list" : []
+  "event/eventList" : [],
+  "event/statusList" : [],
+  "event/severityList" : [],
+  "user/genderList" : [],
+  "user/roleList" : [],
+  "cr/statusList" : []
 })
 
 export const getters = {
@@ -15,8 +20,23 @@ export const getters = {
   user: state => {
     return state.user
   },
-  "event/list": state => {
-    return state["event/list"]
+  "event/eventList": state => {
+    return state["event/eventList"]
+  },
+  "event/statusList": state => {
+    return state["event/statusList"]
+  },
+  "event/severityList": state => {
+    return state["event/severityList"]
+  },
+  "user/genderList": state => {
+    return state["user/genderList"]
+  },
+  "user/roleList": state => {
+    return state["user/roleList"]
+  },
+  "cr/statusList": state => {
+    return state["user/statusList"]
   },
 }
 
@@ -30,8 +50,23 @@ export const mutations = {
   user: ((state, value) => {
     state.user = value
   }),
-  "event/list": ((state, value) => {
-    state["event/list"] = value
+  "event/eventList": ((state, value) => {
+    state["event/eventList"] = value
+  }),
+  "event/severityList": ((state, value) => {
+    state["event/severityList"] = value
+  }),
+  "event/statusList": ((state, value) => {
+    state["event/statusList"] = value
+  }),
+  "user/genderList": ((state, value) => {
+    state["user/genderList"] = value
+  }),
+  "user/roleList": ((state, value) => {
+    state["user/roleList"] = value
+  }),
+  "cr/statusList": ((state, value) => {
+    state["user/statusList"] = value
   }),
 
 }

@@ -12,8 +12,10 @@ const {ROLE, STATUS} = require("../../models/enums");
 const router = express.Router();
 router.post("/",authorize(),addEventSchema, addEvent)
 router.get("/", authorize(),viewEventSchema, getEvents)
-router.get("/list", authorize(),getAllEventList)
-router.delete("/",authorize(ROLE.ADMIN),deleteEventSchema, deleteEvents)
+router.get("/eventList", authorize(),getEventList)
+router.get("/statusList", authorize(),getStatusList)
+router.get("/severityList", authorize(),getSeverityList)
+router.delete("/",authorize(),deleteEventSchema, deleteEvents)
 router.put("/", authorize(),updateEventSchema, updateEvent)
 
 
@@ -91,8 +93,16 @@ function getEvents(req, res, next) {
     }).catch(next);
 }
 
-function getAllEventList(req, res, next) {
-    res.json(eventController.getAllEventList())
+function getEventList(req, res, next) {
+    res.json(eventController.getEventList())
+}
+
+function getStatusList(req, res, next) {
+    res.json(eventController.getStatusList())
+}
+
+function getSeverityList(req, res, next) {
+    res.json(eventController.getSeverityList())
 }
 
 function deleteEventSchema(req, res, next) {
@@ -103,7 +113,7 @@ function deleteEventSchema(req, res, next) {
 }
 
 function deleteEvents(req, res, next) {
-    eventController.deleteEvents(req.body._ids).then((result) => {
+    eventController.deleteEvents(req.user,req.body._ids).then((result) => {
         res.json(result)
     }).catch(next);
 }
@@ -127,7 +137,7 @@ function updateEventSchema(req, res, next) {
 }
 
 function updateEvent(req, res, next) {
-    eventController.updateEvent(req.body).then((event) => {
+    eventController.updateEvent(req.user,req.body).then((event) => {
         res.json(event)
     }).catch(next);
 }

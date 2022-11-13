@@ -5,12 +5,14 @@ export default new Menu({
   value: "app", title: "APP", items: [
     new Menu({
       value: 'main',
+      isHidden : true,
       icon: 'mdi-chart-bubble',
       title: 'Main',
       to: '/main'
     }),
     new Menu({
       value: 'shift',
+      isHidden : true,
       icon: 'mdi-apps',
       title: 'Shift',
       to: '/shift',
@@ -37,7 +39,7 @@ export default new Menu({
           value: 'operator',
           type: "select",
           items: "user",
-          itemKey: "username",
+          // itemKey: "username",
           slot: "operator",
           isReadOnly: true
         }),
@@ -71,24 +73,7 @@ export default new Menu({
           value: 'severity',
           type: "select",
           defaultAmount: "none",
-          items: [
-            {
-              name: "CRITICAL",
-              value: "critical"
-            },
-            {
-              name: "MAJOR",
-              value: "major"
-            },
-            {
-              name: "MINER",
-              value: "miner"
-            },
-            {
-              name: "NONE",
-              value: "none"
-            }
-          ],
+          items: "event/severityList" ,
           isCreateOnly: true
         }),
         new Header({text: 'Reporter', value: 'reporter', isReadOnly: true, slot: "reporter"}),
@@ -98,16 +83,7 @@ export default new Menu({
           value: 'status',
           type: "select",
           defaultAmount: "close",
-          items: [
-            {
-              name: "CLOSE",
-              value: "close"
-            },
-            {
-              name: "OPEN",
-              value: "open"
-            }
-          ], slot: "status"
+          items: "event/statusList"
         }),
         new Header({text: 'Start Time', value: 'startTime', type: "DateTime", defaultAmount: null, slot: "startTime"}),
         new Header({text: 'End Time', value: 'endTime', type: "DateTime", defaultAmount: null, slot: "endTime"}),
@@ -157,6 +133,7 @@ export default new Menu({
     }),
     new Menu({
       value: 'cr',
+      isHidden : true,
       icon: 'mdi-archive-refresh',
       title: 'Change Requests',
       to: '/cr',
@@ -171,7 +148,6 @@ export default new Menu({
           type: "select",
           items: "domain",
           slot: "domain",
-          IOKey: "id",
         }),
         new Header({text: 'Start Time', value: 'startTime', type: "DateTime", defaultAmount: null, slot: "startTime"}),
         new Header({text: 'End Time', value: 'endTime', type: "DateTime", defaultAmount: null, slot: "endTime"}),
@@ -197,24 +173,8 @@ export default new Menu({
           value: 'status',
           type: "select",
           defaultAmount: "ongoing",
-          items: [
-            {
-              name: "ONGOING",
-              value: "ongoing"
-            },
-            {
-              name: "COMPLETE",
-              value: "complete"
-            },
-            {
-              name: "OPEN",
-              value: "open"
-            },
-            {
-              name: "CANCEL",
-              value: "cancel"
-            }
-          ], slot: "status"
+          items: "cr/statusList",
+          slot: "status"
         }),
       ]
     }),
@@ -236,7 +196,7 @@ export default new Menu({
               text: 'Events List',
               value: 'eventsList',
               type: "select",
-              items: "event/list",
+              items: "event/eventList",
               defaultAmount: [],
               isMultiple: true,
               slot : "eventsList"
@@ -277,20 +237,7 @@ export default new Menu({
               text: 'Gender', value: 'gender',
               type: "select",
               defaultAmount: "none",
-              items: [
-                {
-                  name: "NONE",
-                  value: "none"
-                },
-                {
-                  name: "MALE",
-                  value: "male"
-                },
-                {
-                  name: "FEMALE",
-                  value: "female"
-                }
-              ]
+              items: "user/genderList"
             }),
             new Header({text: 'FirstName', value: 'firstName'}),
             new Header({text: 'LastName', value: 'lastName'}),
@@ -300,16 +247,7 @@ export default new Menu({
               value: 'role',
               type: "select",
               defaultAmount: "user",
-              items: [
-                {
-                  name: "USER",
-                  value: "user"
-                },
-                {
-                  name: "ADMIN",
-                  value: "admin"
-                }
-              ]
+              items: "user/roleList"
             }),
             new Header({
               text: 'Domain',
@@ -324,6 +262,7 @@ export default new Menu({
     }),
     new Menu({
       value: 'tools',
+      isHidden : true,
       icon: 'mdi-cogs',
       title: 'Tools',
       to: '/tools',

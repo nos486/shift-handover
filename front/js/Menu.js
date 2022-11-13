@@ -2,6 +2,13 @@ import {Header} from "./Header";
 import headers from "@/menu";
 
 export class Menu {
+  get isHidden() {
+    return this._isHidden;
+  }
+
+  set isHidden(value) {
+    this._isHidden = value;
+  }
   get group() {
     return this._group;
   }
@@ -44,6 +51,7 @@ export class Menu {
    * @param {Boolean} isReadOnly
    * @param {Boolean} editable
    * @param {Boolean} removable
+   * @param isHidden
    * @param {Menu[]} items
    * @param {Header[]} headers
    * @param {String[]} group
@@ -58,6 +66,7 @@ export class Menu {
                 isReadOnly = false,
                 editable = true,
                 removable = true,
+                isHidden = false,
                 items = [],
                 headers = [],
                 group = []
@@ -69,6 +78,7 @@ export class Menu {
     this._icon = icon
     this._to = to
     this._isReadOnly = isReadOnly
+    this._isHidden = isHidden
     this._editable = editable
     this._removable = removable
     this._items = []

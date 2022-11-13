@@ -1,8 +1,8 @@
 <template>
   <div class="d-flex">
-    <v-select :items="typeof this.items === 'string' ? [...additionalItem,...$store.getters['items/'+items]] : this.items" v-model="selected"
-              :item-value="typeof this.items === 'string' ? 'id' : 'value'"
-              :item-text="itemKey!==undefined? itemKey : 'name'"
+    <v-select :items="items" v-model="selected"
+              :item-value="itemKey"
+              :item-text="itemValue"
               :color="$store.getters['app/baseColor']" :item-color="$store.getters['app/baseColor']"
               filled dense rounded single-line :deletable-chips="multiple" hide-details @change="selectorChanged"
               :disabled="loading || disabled" :multiple="multiple" light :small-chips="multiple"
@@ -29,10 +29,9 @@
         </div>
       </template>
     </v-select>
-    <v-btn v-if="refreshBtn && !disabled && typeof this.items === 'string'" fab small class="ml-2" elevation="0"
-           title="Update"
-           :color="$store.getters['app/baseColor']"
-           @click="updateIdValueList(items)" :loading="loading" dark>
+    <v-btn v-if="refreshBtn && !disabled" fab small class="ml-2" elevation="0"
+           title="Update" :color="$store.getters['app/baseColor']"
+           @click="updateIdValueList(itemsName)" :loading="loading" dark>
       <v-icon>mdi-refresh</v-icon>
     </v-btn>
   </div>
@@ -43,15 +42,19 @@ export default {
   name: "ItemSelector",
   props: {
     value: {
-      default: null
+      default: () => {
+        return []
+      }
     },
     itemKey: {
+      default: "id"
+    },
+    itemValue: {
       default: "name"
     },
-    IOKey: {
-      default: null
+    itemsName: {
+      type: String
     },
-    items: {},
     title: {
       default: ""
     },
@@ -91,104 +94,92 @@ export default {
   },
   data: () => {
     return {
-      selected: null,
+      // {name : "Ongoing",id: "ongoing"},
+      items: [],
+      selected: [],
       loading: false,
       searchText: ""
     }
   },
   watch: {
-    isModalShow: function (val) {
-      if (val) this.reset()
-    },
-    value: function (value) {
-      this.selected = this.value
-    },
-    defaultQuery: {
-      handler: function () {
-        console.log("defaultQuery")
+    isModalShow: {
+      handler: function (val) {
+        if (val) this.reset()
       },
-      deep: true
+      immediate: true
     },
+    value: {
+      handler: function () {
+        console.log(this.value)
+        // this.preprocessValueData()
+      },
+      immediate: true,
+      deep: true
+    }
+    //   function (x,y) {
+    //   if (this.multiple) {
+    //     if(this.value[0] != undefined){
+    //       console.log("f",this.value)
+    //       this.preprocessValueData()
+    //     }
+    //   }else {
+    //     if(this.value !== undefined) this.preprocessValueData()
+    //   }
+    // }
   },
   mounted() {
-    if (typeof this.items === 'string') {
-      this.updateIdValueList(this.items)
-      this.selected = this.value
-    } else {
-      this.selected = this.value
-    }
+    this.preprocessValueData()
+    this.updateIdValueList(this.itemsName)
   },
   methods: {
     reset() {
-      if (typeof this.items === 'string') {
-        this.searchText = ""
-        this.updateIdValueList(this.items)
-        this.selected = this.value
-      } else {
-        this.selected = this.value
-      }
+      this.searchText = ""
+      this.preprocessValueData()
+      this.updateIdValueList(this.itemsName)
     },
-    preprocessValueData(value) {
-      let temp = JSON.parse(JSON.stringify(value))
-      let IOtoNative = function (item) {
-        if (this.IOKey !== "id" && item[this.IOKey] !== undefined) {
-          item["id"] = item[this.IOKey]
-          delete item[this.IOKey]
-        }
-        if (this.IOName !== "name" && item[this.IOName] !== undefined) {
-          item["name"] = item[this.IOName]
-          delete item[this.IOName]
-        }
-      }.bind(this)
+    preprocessValueData() {
       if (this.multiple) {
-        temp.forEach((item, index) => {
-          IOtoNative(item)
-        })
+        this.selected = []
+        if (this.value.length > 0 && typeof this.value[0] === 'object') {
+          for (let value of this.value) {
+            this.selected.push(value[this.itemKey])
+          }
+        }else {
+          this.selected = this.value
+        }
       } else {
-        IOtoNative(temp)
+        if (typeof this.value === 'object') {
+          this.selected = this.value[this.itemKey]
+        }else {
+          this.selected = this.value
+        }
       }
-      this.selected = temp
-    },
-    afterProcessValueData(list) {
-      let temp = JSON.parse(JSON.stringify(list))
-      let array = []
-      if (this.multiple) {
-        temp.forEach((item) => {
-          let json = {}
-          json[this.IOKey] = item
-          array.push(json)
-        })
-      } else {
-        return (list)
-      }
-      return array
+      if (this.selected !== this.value) this.selectorChanged(this.selected)
     },
     updateIdValueList(name) {
       this.loading = true
       let payload = {
         name: name,
-        headerData : {...this.defaultQuery}
+        headerData: {...this.defaultQuery}
       }
-
       if (this.searchOn !== undefined && this.searchText !== '') {
         payload.headerData = {
           [this.searchOn]: this.searchText
         }
       }
-
       this.$store.dispatch("items/update", payload).then((res) => {
         this.loading = false
+        this.items = []
+        for (let item of res) {
+          this.items.push({[this.itemKey]: item[this.itemKey], [this.itemValue]: item[this.itemValue]})
+        }
+
       }).then(() => {
         this.loading = false
       })
     },
     selectorChanged(selected) {
-      if(this.IOKey !== null){
-        this.$emit('input', selected[this.IOKey])
-      }else {
-        this.$emit('input', selected)
-      }
-
+      this.$emit('input', selected)
     }
   }
 }

@@ -17,7 +17,9 @@ module.exports = {
     getUsersPagination,
     deleteUsers,
     updateUser,
-    getUserByIdError
+    getUserByIdError,
+    getGenderList,
+    getRoleList,
     // refreshToken,
     // deleteRefreshToken,
     // getAll,
@@ -222,3 +224,23 @@ async function getUserByIdError(userId,nullCheck=true) {
 //     const { id, email, username, role } = user;
 //     return { id, email, username, role };
 // }
+
+
+function getGenderList() {
+    return {
+        result: [
+            {name : "None",id: "none"},
+            {name : "Male",id: "male"},
+            {name : "Female",id: "female"}
+        ]
+    }
+}
+
+function getRoleList() {
+    return {
+        result: [
+            {name : "User",id: "user"},
+            {name : "Admin",id: "admin"}
+        ]
+    }
+}

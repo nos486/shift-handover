@@ -14,6 +14,8 @@ router.post("/batch",authorize(),addsSchema, adds)
 router.get("/", authorize(),viewSchema, get)
 router.delete("/",authorize(),removeSchema, remove)
 router.put("/", authorize(),updateSchema, update)
+router.get("/statusList", authorize(),getStatusList)
+
 
 
 function addSchema(req, res, next) {
@@ -36,6 +38,10 @@ function add(req, res, next) {
     crController.addCR(req.body).then((event) => {
         res.json(event)
     }).catch(next);
+}
+
+function getStatusList(req, res, next) {
+    res.json(crController.getStatusList())
 }
 
 function addsSchema(req, res, next) {

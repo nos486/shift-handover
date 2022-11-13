@@ -4,7 +4,7 @@
     <template v-for="item in headers.items">
       <v-list-item
         :key="item.value"
-        v-if="item.items.length === 0"
+        v-if="item.items.length === 0 && !item.isHidden"
         :color="$store.getters['app/baseColor']"
         :to="item.to" link>
         <v-list-item-icon>
@@ -19,7 +19,7 @@
         :key="item.value"
         :ref="'listGroup-'+item.value"
         :group="item.to"
-        v-if="item.items.length !== 0"
+        v-if="item.items.length !== 0 && !item.isHidden"
         :prepend-icon="item.icon"
         :color="$store.getters['app/baseColor']"
         no-action>

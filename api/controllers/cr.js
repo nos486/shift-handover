@@ -12,7 +12,8 @@ module.exports = {
     getCrsPagination,
     getCrs,
     deleteCrs,
-    updateCr
+    updateCr,
+    getStatusList
 }
 
 async function addCR({
@@ -126,4 +127,16 @@ async function updateCr(query) {
     await cr.save()
     return cr
 }
+
+function getStatusList() {
+    return {
+        result: [
+            {name : "Ongoing",id: "ongoing"},
+            {name : "Complete",id: "complete"},
+            {name : "Open",id: "open"},
+            {name : "Cancel",id: "cancel"},
+        ]
+    }
+}
+
 
