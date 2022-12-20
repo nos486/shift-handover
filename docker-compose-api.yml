@@ -4,7 +4,7 @@ services:
     image: node:17.8.0
     restart: always
     ports:
-      - "3000:3000"
+      - "3001:3000"
     volumes:
       - ./api:/app
     environment:
